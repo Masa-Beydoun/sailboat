@@ -5,24 +5,38 @@ import { Water } from 'three/examples/jsm/objects/Water.js';
 //import { GLTFLoader } from "https://cdn.skypack.dev/three@0.129.0/examples/jsm/loaders/GLTFLoader.js";;
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';
 
+
 import pxday from 'C:/Users/karee/Desktop/New folder/pxday.jpg';
-
 import nxday from 'C:/Users/karee/Desktop/New folder/nxday.jpg';
-
 import pyday from 'C:/Users/karee/Desktop/New folder/pyday.jpg';
 import nyday from 'C:/Users/karee/Desktop/New folder/nyday.jpg';
-
 import pzday from 'C:/Users/karee/Desktop/New folder/pzday.jpg';
 import nzday from 'C:/Users/karee/Desktop/New folder/nzday.jpg';
-import { depth, textureLoad } from 'three/examples/jsm/nodes/Nodes.js';
+
+
+import front from 'C:/Users/karee/Desktop/New folder/front.jpg';
+import top from 'C:/Users/karee/Desktop/New folder/top.jpg';
+import back from 'C:/Users/karee/Desktop/New folder/back.jpg';
+import left from 'C:/Users/karee/Desktop/New folder/left.jpg';
+import right from 'C:/Users/karee/Desktop/New folder/right.jpg';
+import bottom from 'C:/Users/karee/Desktop/New folder/bottom.jpg';
+
+
+import water from 'C:/Users/karee/Desktop/New folder/water.jpg';
+import { depth, reflect, textureLoad } from 'three/examples/jsm/nodes/Nodes.js';
 import { TextureLoader } from 'three/src/Three.js';
 import { FlyControls } from 'three/addons/controls/FlyControls.js';
 
-const boatUrl=new URL('C:/Users/karee/Desktop/New folder/scene.gltf',import.meta.url);
+const boatUrl=new URL('C:/Users/karee/Desktop/New folder/untitled.glb',import.meta.url);
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75,window.innerWidth/window.innerHeight,0.1,1000);
 const renderer = new THREE.WebGLRenderer();
 const orbit= new OrbitControls(camera,renderer.domElement);
+
+
+
+
+
 
 
 const loader=new GLTFLoader();
@@ -40,11 +54,15 @@ loader.load(
        );
 
        scene.add(model);
-       model.scale.set(4,4,4);
-        model.position.set(0,4.9,0);
+       model.scale.set(0.1,0.1,0.1);
+       const mixer = new THREE.AnimationMixer(model);
+       gltf.animations.forEach((clip) => {
+           mixer.clipAction(clip).play();
+        });
+      //  model.position.set(0,4.9,0);
      //   model.geometry.parameters.width;
        // console.log("MODEL "+model);
-//animate(model);
+animate(model);
         animateModel(model);
     },
     undefined
@@ -64,17 +82,7 @@ const axeHelper=new THREE.AxesHelper(5);
 scene.add(axeHelper);
 camera.position.set(0,2,5);
 
-const texture = textureLoader.load(pxday);
 
-const PlaneGeometry=new THREE.PlaneGeometry(30,30);
-const PlaneMatirial=new THREE.MeshBasicMaterial({side:THREE.DoubleSide,map:texture});
-const plane=new THREE.Mesh(PlaneGeometry,PlaneMatirial);
-plane.rotation.x=-0.5 * Math.PI;
-//scene.add(plane);
-
-const gridHelper = new THREE.GridHelper(30);
-//gridHelper.rotation.x=-0.5 * Math.PI;
-//scene.add(gridHelper);
 
 const gui= new dat.GUI();
 
@@ -108,12 +116,20 @@ gui.add(options, 'position', -10.0, 10.0).onChange(function (e) {
 const cubeTextureLoader=new THREE.CubeTextureLoader();
 scene.background=cubeTextureLoader.load(
     [
-        pxday,
-        nxday,
-        pyday,
-        nyday,
-        pzday,
-        nzday
+
+        left,
+        right,
+        top,
+        bottom,
+        back,
+        front
+
+        // pxday,
+        // nxday,
+        // pyday,
+        // nyday,
+        // pzday,
+        // nzday
     ]
 );
 
@@ -129,43 +145,6 @@ gui.addColor(options,'sphereColor').onChange(function(e)
 {
     sphere.material.color.set(e);
 });
-let step=0;
-
-const waterGeometry = new THREE.PlaneGeometry(30, 30);
-const water = new Water(
-    waterGeometry,
-    {
-        textureWidth: 512,
-        textureHeight: 512,
-        waterNormals: new THREE.TextureLoader().load('https://threejs.org/examples/textures/waternormals.jpg', function (texture) {
-            texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-        }),
-        sunDirection: new THREE.Vector3(),
-        sunColor: 0xffffff,
-        waterColor: 0x001e0f,
-        distortionScale: 3.7,
-        fog: scene.fog !== undefined,
-        side: THREE.DoubleSide
-    }
-);
-water.rotation.x = - Math.PI / 2;
-//fix with water level ??
-water.position.y = -0.5;
-scene.add(water);
-const sailboatGeometry = new THREE.BoxGeometry(4, 2, 16); // You can replace this with your sailboat model
-const sailboatMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
-const sailboat = new THREE.Mesh(sailboatGeometry, sailboatMaterial);
-sailboat.position.set(0, 0.5, 0); // Position the sailboat above the water surface
-//scene.add(sailboat);
-// Animate water
-function animateWater() {
-    requestAnimationFrame(animateWater);
-    const time = performance.now() * 0.00009;
-    water.material.uniforms['time'].value += 1.0 / 60.0;
-    water.material.uniforms['time'].value = time;
-    renderer.render(scene, camera);
-}
-animateWater();
 
 
 var moveForward = false;
@@ -212,16 +191,6 @@ document.addEventListener('keyup', onKeyUp);
 
 
 
-
-const waterLevel = -0.5; // Adjust this value according to the water level
-const GRAVITY = 9.81; // m/s^2, acceleration due to gravity
-const WATER_DENSITY = 1000; // kg/m^3, density of water
-const MAX_BUOYANT_FORCE = 8000; // Adjust as needed
-let velocityY = 0; // Initialize velocityY
-
-
-
-
 function animateModel(model)
 {
     requestAnimationFrame(() => animateModel(model));
@@ -233,43 +202,7 @@ function animateModel(model)
     if (moveLeft) camera.position.x -= 0.1;
     if (moveRight) camera.position.x += 0.1;
 
-    // Calculate submerged volume
-    const submergedVolume = calculateSubmergedVolumeMODEL(model);
-    console.log("submergedVolume "+submergedVolume);
-
- // Calculate buoyant force
- const buoyantForce = Math.min(WATER_DENSITY * GRAVITY * submergedVolume, MAX_BUOYANT_FORCE);
- console.log("buoyantForce "+buoyantForce);
- console.log("WATER_DENSITY * GRAVITY * submergedVolume "+WATER_DENSITY * GRAVITY * submergedVolume);
- // Calculate weight of the sailboat
- const boatVolume = 2 * 4 * 16;
- const weight = boatVolume * GRAVITY;
-
- // Calculate net force
- const netForce = buoyantForce - weight;
-
- // Apply net force to boat with damping
- const dampingFactor = 0.2; // Adjust damping factor as needed
- velocityY += (netForce / (4 * 16) - velocityY * dampingFactor) * 0.002;
- //0.0005
- model.position.y += velocityY * 0.0005;
-
-
- /*
- // Prevent sailboat from sinking too deep
- const minDepth = -2; // Adjust as needed
- if (model.position.y < minDepth) {
-    model.position.y = minDepth;
-     velocityY = 0;
- }
- const maxDepth = 2; // Adjust as needed
- if (model.position.y > maxDepth) {
-    model.position.y = maxDepth;
-     velocityY = 0;
-     
- }*/
 console.log(model.position.y);
-console.log(velocityY);
 
     renderer.render(scene, camera);
 }
@@ -277,170 +210,136 @@ console.log(velocityY);
 
 
 
-function calculateSubmergedVolume() {
-    // Get the dimensions of the sailboat
-    const boatWidth = sailboat.geometry.parameters.width;
-    const boatDepth = sailboat.geometry.parameters.depth;
-    const boatHeightParam = sailboat.geometry.parameters.height; // Rename to avoid conflict
 
-    // Calculate the volume of the sailboat
-    const boatVolume = boatWidth * boatDepth * boatHeightParam;
-
-    // Calculate the volume of water displaced by the submerged portion of the sailboat
-    const submergedHeight = Math.min(boatHeightParam, Math.max(0, waterLevel - sailboat.position.y));
-    const submergedVolume = boatWidth * boatDepth * submergedHeight;
-
-    // The submerged volume is the difference between the total volume and the volume above water level
-    return submergedVolume;
-}
-
-function calculateSubmergedVolumeMODEL(model) {
-    let submergedVolume = 0;
-
-    // Assuming the dimensions of the boat
-    const boatWidth = 4; // Set your desired width here
-    const boatDepth = 16; // Set your desired depth here
-    const boatHeight = 2; // Set your desired height here
-
-    // Calculate the volume of the sailboat
-    const boatVolume = boatWidth * boatDepth * boatHeight;
-
-    // Traverse through the children of the loaded model to find meshes
-    model.traverse((child) => {
-        if (child.isMesh) {
-            const boatGeometry = child.geometry;
-            if (boatGeometry) {
-                // Get the scale of the child mesh
-                const scale = child.scale;
-
-                // Calculate the actual dimensions of the sailboat based on scale
-                const actualWidth = 4;//boatWidth * scale.x;
-                const actualDepth = 16;//boatDepth * scale.z;
-                const actualHeight = 2;//boatHeight * scale.y;
-
-                // Calculate the volume of the sailboat
-                const actualVolume = actualWidth * actualDepth * actualHeight;
-
-                // Calculate the volume of water displaced by the submerged portion of the sailboat
-                const submergedHeight = Math.min(actualHeight, Math.max(0, waterLevel - model.position.y));
-                const submergedVolumePart = actualWidth * actualDepth * submergedHeight;
-
-                // Add the submerged volume of this part to the total submerged volume
-                submergedVolume += submergedVolumePart;
-            }
-        }
-    });
-
-    return submergedVolume;
-}
-// Vertex shader
-const vertexShader = `
-  void main() {
-    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-  }
-`;
-
-// Fragment shader
-const fragmentShader = `
-  uniform float time;
-  uniform vec2 resolution;
-
-  void main() {
-    vec2 uv = gl_FragCoord.xy / resolution.xy;
-    float frequency = 2.0;
-    float amplitude = 0.1;
-    float speed = 1.0;
-
-    float x = uv.x * frequency + time * speed;
-    float y = uv.y * frequency + time * speed;
-
-    float distortion = sin(x) * cos(y) * amplitude;
-    vec3 color = vec3(0.0, 0.5 + distortion, 1.0);
-
-    gl_FragColor = vec4(color, 1.0);
-  }
-`;
-
-// Shader material
-const material = new THREE.ShaderMaterial({
-  vertexShader: vertexShader,
-  fragmentShader: fragmentShader,
-  uniforms: {
-    time: { value: 0.0 },
-    resolution: { value: new THREE.Vector2() },
-  },
-});
-
-// Set the resolution uniform based on renderer size
-material.uniforms.resolution.value.x = renderer.domElement.width;
-material.uniforms.resolution.value.y = renderer.domElement.height;
-
-// Create a plane geometry
-const geometry = new THREE.PlaneGeometry(100, 100, 100, 100);
-
-// Create mesh with the shader material
-const waterMesh = new THREE.Mesh(geometry, material);
-waterMesh.position.y=2;
-waterMesh.rotation.x = - Math.PI / 2;
-scene.add(waterMesh);
-
-function animatesea()
-{
-    material.uniforms.time.value += 0.01;
-
-}
 
 function animate(model) {
     requestAnimationFrame(animate);
 
+   
+    waterMaterial5.uniforms.time.value += 0.0089;
+   
+    renderer.render(scene, camera);
     // Move the camera based on keyboard input
     if (moveForward) camera.position.z -= 0.1;
     if (moveBackward) camera.position.z += 0.1;
     if (moveLeft) camera.position.x -= 0.1;
     if (moveRight) camera.position.x += 0.1;
 
-    // Calculate submerged volume
-    const submergedVolume = calculateSubmergedVolume();
-    console.log("submergedVolume "+submergedVolume);
-
- // Calculate buoyant force
- const buoyantForce = WATER_DENSITY * GRAVITY * submergedVolume;
- //const buoyantForce = Math.min(WATER_DENSITY * GRAVITY * submergedVolume, MAX_BUOYANT_FORCE);
-
- 
- // Calculate weight of the sailboat
- const boatVolume = sailboat.geometry.parameters.width * sailboat.geometry.parameters.depth * sailboat.geometry.parameters.height;
- const weight = boatVolume * GRAVITY;
-
- // Calculate net force
- const netForce = buoyantForce - weight;
- console.log("buoyantForce "+buoyantForce);
- console.log("weight "+weight);
-
-
- // Apply net force to boat with damping
- const dampingFactor = 0.2; // Adjust damping factor as needed
- velocityY += (netForce / (sailboat.geometry.parameters.width * sailboat.geometry.parameters.depth) - velocityY * dampingFactor) * 0.002;
- //0.0005
- sailboat.position.y += velocityY * 0.0005;
- console.log("velocityY "+velocityY);
-
- /*
- // Prevent sailboat from sinking too deep
- const minDepth = -2; // Adjust as needed
- if (sailboat.position.y < minDepth) {
-     sailboat.position.y = minDepth;
-     velocityY = 0;
- }
- const maxDepth = 2; // Adjust as needed
- if (sailboat.position.y > maxDepth) {
-     sailboat.position.y = maxDepth;
-     velocityY = 0;
- }*/
-console.log("postition y "+sailboat.position.y);
-//console.log(velocityY);
-//animateModel(model);
-animatesea();
     renderer.render(scene, camera);
 }
+
+
+
+// THE MOST GOOD WATER 
+  
+
+
+const ambientLight = new THREE.AmbientLight(0xaaaaaa);
+scene.add(ambientLight);
+
+// Directional Light
+const directionalLight = new THREE.DirectionalLight(0xffffff, 0.6);
+directionalLight.position.set(-1, 1, 1).normalize();
+scene.add(directionalLight);
+
+// Water Geometry
+
+const waterGeometry5 = new THREE.PlaneGeometry(10000, 10000, 512, 512);
+
+// Water Shader
+const waterUniforms = {
+  time: { value: 1.0 },
+  resolution: { value: new THREE.Vector2() },
+  oceanColor: { value: new THREE.Color(0x017B92) },
+  skyColor: { value: new THREE.Color(0x87ceeb) },
+  sunDirection: { value: new THREE.Vector3(0.70707, 0.70707, 0) }
+};
+
+const waterMaterial5 = new THREE.ShaderMaterial({
+  uniforms: waterUniforms,
+  vertexShader: `
+  uniform float time;
+  varying vec2 vUv;
+
+  float hash(vec2 p) {
+    return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
+  }
+
+  float noise(vec2 p) {
+    vec2 i = floor(p);
+    vec2 f = fract(p);
+    float a = hash(i);
+    float b = hash(i + vec2(1.0, 0.0));
+    float c = hash(i + vec2(0.0, 1.0));
+    float d = hash(i + vec2(1.0, 1.0));
+    vec2 u = f * f * (3.0 - 2.0 * f);
+    return mix(a, b, u.x) +
+           (c - a) * u.y * (1.0 - u.x) +
+           (d - b) * u.x * u.y;
+  }
+
+  void main() {
+    vUv = uv;
+    vec3 pos = position;
+    float wave1 = sin(pos.x * 7.02 + time) * 2.0;
+    float wave2 = cos(pos.y * 7.03 + time * 0.7) * 2.0;
+    float wave3 = sin(pos.x * 7.05 + time * 0.5) * 1.5;
+    float wave4 = cos(pos.y * 7.07 + time * 0.3) * 1.5;
+    float wave5 = noise(vec2(pos.x * 0.1, pos.y * 0.1 + time * 0.2)) * 2.0;
+    float wave6 = sin(pos.x * 8.01 + time * 0.9) * 1.0; // Additional wave for detail
+    float wave7 = cos(pos.y * 8.02 + time * 0.8) * 1.0; // Additional wave for detail
+    pos.z += wave1 + wave2 + wave3 + wave4 + wave5 + wave6 + wave7;
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
+  }
+`,
+  fragmentShader: `
+   uniform vec3 oceanColor;
+    uniform vec3 skyColor;
+    varying vec2 vUv;
+
+    void main() {
+      // Approximate depth using the y-coordinate of the fragment's position
+      float depth = gl_FragCoord.y / 500.0;
+      // Mix the oceanColor with the skyColor based on the depth
+      vec3 finalColor = mix(oceanColor, skyColor, depth);
+      gl_FragColor = vec4(finalColor, 0.9); // Adjust opacity here (0.6 for example)
+    }
+  `,
+  transparent: true, // Enable transparency
+  side: THREE.DoubleSide
+});
+
+const water5 = new THREE.Mesh(waterGeometry5, waterMaterial5);
+water5.rotation.x = -Math.PI / 2;
+// Adjust the position as needed to fit within your scene
+water5.position.set(-60, 0, 0); 
+scene.add(water5);
+
+
+const boxGeometry = new THREE.BoxGeometry(5, 2, 3);
+const boxMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 }); // Adjust the color as needed
+const box = new THREE.Mesh(boxGeometry, boxMaterial);
+
+// Set initial position of the box
+box.position.set(0, 5, 0); // Adjust the position as needed to place it on the water surface
+scene.add(box);
+
+//window.addEventListener('resize', onWindowResize, false);
+//onWindowResize();
+
 animate();
+function animateBoat() {
+    // Calculate the displacement of the water at the position of the boat
+    const boatPosition = new THREE.Vector3();
+    water5.getWorldPosition(boatPosition);
+    const waterDisplacement = Math.sin((boatPosition.x + boatPosition.z) / 10 + waterUniforms.time.value) * 0.5; // Adjust the parameters as needed for the desired effect
+
+    // Update box position to simulate boat movement
+    box.position.y = water5.position.y + waterDisplacement + 2-1; // Adjust the offset as needed to keep the box above the water surface
+
+    // Request animation frame
+    requestAnimationFrame(animateBoat);
+}
+
+// Call the animateBoat function to start the animation
+animateBoat();
