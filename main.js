@@ -20,7 +20,7 @@ import back from 'C:/Users/karee/Desktop/New folder/back.jpg';
 import left from 'C:/Users/karee/Desktop/New folder/left.jpg';
 import right from 'C:/Users/karee/Desktop/New folder/right.jpg';
 import bottom from 'C:/Users/karee/Desktop/New folder/bottom.jpg';
-
+import water6 from 'C:/Users/karee/Desktop/New folder/sea.jpg';
 
 import water from 'C:/Users/karee/Desktop/New folder/water.jpg';
 import { depth, reflect, textureLoad } from 'three/examples/jsm/nodes/Nodes.js';
@@ -123,6 +123,13 @@ scene.background=cubeTextureLoader.load(
         bottom,
         back,
         front
+
+        // left,
+        // right,
+        // top,
+        // bottom,
+        // back,
+        // front
 
         // pxday,
         // nxday,
@@ -248,66 +255,87 @@ const waterGeometry5 = new THREE.PlaneGeometry(10000, 10000, 512, 512);
 
 // Water Shader
 const waterUniforms = {
-  time: { value: 1.0 },
-  resolution: { value: new THREE.Vector2() },
-  oceanColor: { value: new THREE.Color(0x017B92) },
-  skyColor: { value: new THREE.Color(0x87ceeb) },
-  sunDirection: { value: new THREE.Vector3(0.70707, 0.70707, 0) }
-};
-
-const waterMaterial5 = new THREE.ShaderMaterial({
-  uniforms: waterUniforms,
-  vertexShader: `
-  uniform float time;
-  varying vec2 vUv;
-
-  float hash(vec2 p) {
-    return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
-  }
-
-  float noise(vec2 p) {
-    vec2 i = floor(p);
-    vec2 f = fract(p);
-    float a = hash(i);
-    float b = hash(i + vec2(1.0, 0.0));
-    float c = hash(i + vec2(0.0, 1.0));
-    float d = hash(i + vec2(1.0, 1.0));
-    vec2 u = f * f * (3.0 - 2.0 * f);
-    return mix(a, b, u.x) +
-           (c - a) * u.y * (1.0 - u.x) +
-           (d - b) * u.x * u.y;
-  }
-
-  void main() {
-    vUv = uv;
-    vec3 pos = position;
-    float wave1 = sin(pos.x * 7.02 + time) * 2.0;
-    float wave2 = cos(pos.y * 7.03 + time * 0.7) * 2.0;
-    float wave3 = sin(pos.x * 7.05 + time * 0.5) * 1.5;
-    float wave4 = cos(pos.y * 7.07 + time * 0.3) * 1.5;
-    float wave5 = noise(vec2(pos.x * 0.1, pos.y * 0.1 + time * 0.2)) * 2.0;
-    float wave6 = sin(pos.x * 8.01 + time * 0.9) * 1.0; // Additional wave for detail
-    float wave7 = cos(pos.y * 8.02 + time * 0.8) * 1.0; // Additional wave for detail
-    pos.z += wave1 + wave2 + wave3 + wave4 + wave5 + wave6 + wave7;
-    gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
-  }
-`,
-  fragmentShader: `
-   uniform vec3 oceanColor;
-    uniform vec3 skyColor;
-    varying vec2 vUv;
-
-    void main() {
-      // Approximate depth using the y-coordinate of the fragment's position
-      float depth = gl_FragCoord.y / 500.0;
-      // Mix the oceanColor with the skyColor based on the depth
-      vec3 finalColor = mix(oceanColor, skyColor, depth);
-      gl_FragColor = vec4(finalColor, 0.9); // Adjust opacity here (0.6 for example)
-    }
-  `,
-  transparent: true, // Enable transparency
-  side: THREE.DoubleSide
-});
+    time: { value: 1.0 },
+    resolution: { value: new THREE.Vector2() },
+    oceanColor: { value: new THREE.Color(0x017f99) },
+    skyColor: { value: new THREE.Color(0x87ceeb) },
+    sunDirection: { value: new THREE.Vector3(0.70707, 0.70707, 0) }
+  };
+  
+  const waterMaterial5 = new THREE.ShaderMaterial({
+    uniforms: waterUniforms,
+    vertexShader: `
+      uniform float time;
+      varying vec2 vUv;
+      varying vec3 vNormal;
+      varying vec3 vPosition;
+  
+      float hash(vec2 p) {
+        return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
+      }
+  
+      float noise(vec2 p) {
+        vec2 i = floor(p);
+        vec2 f = fract(p);
+        float a = hash(i);
+        float b = hash(i + vec2(1.0, 0.0));
+        float c = hash(i + vec2(0.0, 1.0));
+        float d = hash(i + vec2(1.0, 1.0));
+        vec2 u = f * f * (3.0 - 2.0 * f);
+        return mix(a, b, u.x) +
+               (c - a) * u.y * (1.0 - u.x) +
+               (d - b) * u.x * u.y;
+      }
+  
+      void main() {
+        vUv = uv;
+        vNormal = normal;
+        vPosition = position;
+  
+        vec3 pos = position;
+        float wave1 = sin(pos.x * 7.02 + time) * 2.0;
+        float wave2 = cos(pos.y * 7.03 + time * 0.7) * 2.0;
+        float wave3 = sin(pos.x * 7.05 + time * 0.5) * 1.5;
+        float wave4 = cos(pos.y * 7.07 + time * 0.3) * 1.5;
+        float wave5 = noise(vec2(pos.x * 0.1, pos.y * 0.1 + time * 0.2)) * 2.0;
+        float wave6 = sin(pos.x * 8.01 + time * 0.9) * 1.0;
+        float wave7 = cos(pos.y * 8.02 + time * 0.8) * 1.0;
+        pos.z += wave1 + wave2 + wave3 + wave4 + wave5 + wave6 + wave7;
+  
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
+      }
+    `,
+    fragmentShader: `
+      uniform vec3 oceanColor;
+      uniform vec3 skyColor;
+      uniform float time;
+      varying vec2 vUv;
+      varying vec3 vNormal;
+      varying vec3 vPosition;
+  
+      void main() {
+        float depth = gl_FragCoord.y / 500.0;
+        vec3 finalColor = mix(oceanColor, skyColor, depth);
+  
+        // Apply blue tint and fog effect
+        float fogAmount = smoothstep(0.0, 1.0, depth * 2.0);
+        finalColor = mix(finalColor, vec3(0.0, 0.4, 0.7), fogAmount);
+  
+        // Simulate caustics (light patterns on the ocean floor)
+        float caustics = sin(vUv.x * 30.0 + time * 10.0) * 0.01;
+        finalColor += vec3(caustics * 0.1, caustics * 0.2, caustics * 0.3);
+  
+        // Add specular highlight for a more realistic water surface
+        vec3 lightDir = normalize(vec3(-0.5, 0.5, 1.0));
+        float specular = pow(max(dot(reflect(lightDir, normalize(vNormal)), vec3(0, 0, 1)), 0.0), 32.0);
+        finalColor += vec3(specular * 0.3);
+  
+        gl_FragColor = vec4(finalColor, 0.9); // Adjust opacity here
+      }
+    `,
+    transparent: true, // Enable transparency
+    side: THREE.DoubleSide
+  });
 
 const water5 = new THREE.Mesh(waterGeometry5, waterMaterial5);
 water5.rotation.x = -Math.PI / 2;
