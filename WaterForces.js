@@ -2,7 +2,8 @@ import { Vector3 } from "three";
 
 import * as dat from "dat.gui";
 
-import enviroment from "./Enviroment";
+import Enviroment from "./Enviroment";
+const enviroment = new Enviroment();
 class WaterForce {
 
     constructor() {
@@ -65,7 +66,7 @@ class WaterForce {
         let relativeVelocity = this.velocity.clone();
         relativeVelocity.x += enviroment.waterSpeed_X;
 
-        let waterForce = 0.5 * enviroment.cd * enviroment.waterDensity * enviroment.surfaceAreaSpace * Math.pow(relativeVelocity.x, 2);
+        let waterForce = 0.5 * enviroment.cd * enviroment.waterDensity * enviroment.surfaceAreaSpace * Math.pow(enviroment.waterSpeedX, 2);
 
         let waterForceVector = new Vector3(-waterForce, 0, 0);
 
@@ -76,7 +77,7 @@ class WaterForce {
         let relativeVelocity = this.velocity.clone();
         relativeVelocity.z += enviroment.waterSpeedZ;
 
-        let waterForce = 0.5 * enviroment.cd * enviroment.waterDensity * enviroment.surfaceArea * Math.pow(relativeVelocity.z, 2);
+        let waterForce = 0.5 * enviroment.cd * enviroment.waterDensity * enviroment.surfaceAreaSpace * Math.pow(enviroment.waterSpeedZ, 2);
 
         let waterForceVector = new Vector3(0, 0, waterForce);
 
@@ -86,7 +87,7 @@ class WaterForce {
         let relativeVelocity = this.velocity.clone();
         relativeVelocity.z += this.waterSpeed_Z;
 
-        let waterForce = 0.5 * enviroment.cd * enviroment.waterDensity * enviroment.surfaceArea * Math.pow(relativeVelocity.z, 2);
+        let waterForce = 0.5 * enviroment.cd * enviroment.waterDensity * enviroment.surfaceAreaSpace * Math.pow(enviroment.waterSpeed, 2);
 
         let waterForceVector = new Vector3(0, 0, -waterForce);
 
@@ -96,7 +97,7 @@ class WaterForce {
 
 
     calculateWaterResistance() {
-        let waterResistance = 0.5 * enviroment.waterDensity * enviroment.surfaceArea * Math.pow(enviroment.velocity.lengthSq(), 2);
+        let waterResistance = 0.5 * enviroment.waterDensity * enviroment.surfaceAreaSpace * Math.pow(this.velocity.lengthSq(), 2);
         let waterResistanceVector = new Vector3(0, waterResistance, 0);
 
         return waterResistanceVector;
@@ -104,7 +105,7 @@ class WaterForce {
 
 
     calculateBernoly() {
-        let p = enviroment.p0 - 0.5 * enviroment.waterDensity * Math.pow((velocity.lengthSq() - enviroment.v0), 2);
+        let p = enviroment.p0 - 0.5 * enviroment.waterDensity * Math.pow((this.velocity.lengthSq() - enviroment.v0), 2);
     }
 
 

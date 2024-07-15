@@ -29,7 +29,8 @@ import { TextureLoader } from 'three/src/Three.js';
 import { FlyControls } from 'three/addons/controls/FlyControls.js';
 
 import WindForces from "./WindForces";
-import WaterForces from "./WaterForces";
+import TotalForce from "./TotalForce"
+
 
 const boatUrl = new URL('./untitled.glb', import.meta.url);
 const scene = new THREE.Scene();
@@ -38,7 +39,9 @@ const renderer = new THREE.WebGLRenderer();
 const orbit = new OrbitControls(camera, renderer.domElement);
 
 const windForce = new WindForces();
-const waterForce = new WaterForces();
+const totalForce = new TotalForce();
+totalForce.showSimulation();
+
 var cameraOffset = new Vector3(0, 10, -60);
 var model;
 
@@ -378,11 +381,7 @@ const update = (delta) => {
         windForce.update();
     }
 
-    if (waterForce.startSimulation == true) {
-        orbit.update(delta);
 
-        waterForce.update();
-    }
     //   تحديث موقع المنطاد بناءا على الفيزياء 
     const newPosition = new Vector3(
         windForce.position.x,
