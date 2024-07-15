@@ -4,46 +4,48 @@ import * as dat from 'dat.gui';
 import { Water } from 'three/examples/jsm/objects/Water.js';
 //import { GLTFLoader } from "https://cdn.skypack.dev/three@0.129.0/examples/jsm/loaders/GLTFLoader.js";;
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { Vector3 } from "three";
 
 
-import pxday from 'C:/Users/karee/Desktop/New folder/pxday.jpg';
-import nxday from 'C:/Users/karee/Desktop/New folder/nxday.jpg';
-import pyday from 'C:/Users/karee/Desktop/New folder/pyday.jpg';
-import nyday from 'C:/Users/karee/Desktop/New folder/nyday.jpg';
-import pzday from 'C:/Users/karee/Desktop/New folder/pzday.jpg';
-import nzday from 'C:/Users/karee/Desktop/New folder/nzday.jpg';
+import pxday from 'D:/ThreeJS/sailboat/pxday.jpg';
+import nxday from 'D:/ThreeJS/sailboat/nxday.jpg';
+import pyday from 'D:/ThreeJS/sailboat/pyday.jpg';
+import nyday from 'D:/ThreeJS/sailboat/nyday.jpg';
+import pzday from 'D:/ThreeJS/sailboat/pzday.jpg';
+import nzday from 'D:/ThreeJS/sailboat/nzday.jpg';
 
 
-import front from 'C:/Users/karee/Desktop/New folder/front.jpg';
-import top from 'C:/Users/karee/Desktop/New folder/top.jpg';
-import back from 'C:/Users/karee/Desktop/New folder/back.jpg';
-import left from 'C:/Users/karee/Desktop/New folder/left.jpg';
-import right from 'C:/Users/karee/Desktop/New folder/right.jpg';
-import bottom from 'C:/Users/karee/Desktop/New folder/bottom.jpg';
-import water6 from 'C:/Users/karee/Desktop/New folder/sea.jpg';
+import front from 'D:/ThreeJS/sailboat/front.jpg';
+import top from 'D:/ThreeJS/sailboat/top.jpg';
+import back from 'D:/ThreeJS/sailboat/back.jpg';
+import left from 'D:/ThreeJS/sailboat/left.jpg';
+import right from 'D:/ThreeJS/sailboat/right.jpg';
+import bottom from 'D:/ThreeJS/sailboat/bottom.jpg';
+import water6 from 'D:/ThreeJS/sailboat/sea.jpg';
 
-import water from 'C:/Users/karee/Desktop/New folder/water.jpg';
-import { depth, reflect, textureLoad } from 'three/examples/jsm/nodes/Nodes.js';
+import water from 'D:/ThreeJS/sailboat/water.jpg';
+import { depth, mod, reflect, textureLoad } from 'three/examples/jsm/nodes/Nodes.js';
 import { TextureLoader } from 'three/src/Three.js';
 import { FlyControls } from 'three/addons/controls/FlyControls.js';
 
-const boatUrl=new URL('C:/Users/karee/Desktop/New folder/untitled.glb',import.meta.url);
+import WindForces from "./WindForces";
+
+const boatUrl=new URL('D:/ThreeJS/sailboat/untitled.glb',import.meta.url);
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75,window.innerWidth/window.innerHeight,0.1,1000);
 const renderer = new THREE.WebGLRenderer();
 const orbit= new OrbitControls(camera,renderer.domElement);
 
-
-
-
-
+const windForce = new WindForces();
+var cameraOffset = new Vector3(0, 10, -60);
+var model;
 
 
 const loader=new GLTFLoader();
 loader.load(
     boatUrl.href,
     function(gltf){
-       const model=gltf.scene;
+        model=gltf.scene;
        const desiredHeight = 2;
        const desiredDepth = 2;
        const desiredWidth = 4;
@@ -367,7 +369,64 @@ function animateBoat() {
 
     // Request animation frame
     requestAnimationFrame(animateBoat);
+    update();
 }
+
+
+const update = (delta) => {
+    if (windForce.startSimulation == true) {
+        orbit.update(delta);
+
+        windForce.update();
+    }
+
+    //   تحديث موقع المنطاد بناءا على الفيزياء 
+    const newPosition = new Vector3(
+        windForce.position.x,
+        windForce.position.y,
+        windForce.position.z,
+    );
+
+    // // التحقق من عدم تجاوز الحدود الداخلية للسكاي بوكس
+    // const halfSkyboxSize = 2450; // نصف أبعاد السكاي بوكس
+    // newPosition.clampScalar(-halfSkyboxSize, halfSkyboxSize);
+
+    // ballon.position.copy(newPosition);
+    model.position.copy(newPosition);
+
+     // تحديث موقع الكاميرا بناءً على الموقع الجديد للمنطاد
+    //  camera.position.x = 2 * model.position.x +  cameraOffset.x ;
+    //  camera.position.y = model.position.y + cameraOffset.y;
+    //  camera.position.z = 2 * model.position.z + cameraOffset.z;
+
+
+    // camera.lookAt(model.position);
+
+    // رسم السيناريو
+};
+
+
+export const main = () => {
+
+    let lastTime = new Date().getTime();
+    
+    const loop = () => {
+        window.requestAnimationFrame(loop);
+        const currentTime = new Date().getTime();
+        const delta = currentTime - lastTime;
+        lastTime = currentTime;
+
+        update(delta);
+        renderer.render(scene, camera);
+    };
+
+    // init();
+    loop();
+};
+
 
 // Call the animateBoat function to start the animation
 animateBoat();
+
+// Main program
+main();
