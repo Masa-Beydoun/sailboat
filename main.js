@@ -40,7 +40,6 @@ const orbit = new OrbitControls(camera, renderer.domElement);
 
 const windForce = new WindForces();
 const totalForce = new TotalForce();
-totalForce.showSimulation();
 
 var cameraOffset = new Vector3(0, 10, -60);
 var model;
@@ -212,7 +211,7 @@ function animateModel(model) {
     if (moveLeft) camera.position.x -= 0.1;
     if (moveRight) camera.position.x += 0.1;
 
-    console.log(model.position.y);
+    // console.log(model.position.y);
 
     renderer.render(scene, camera);
 }
@@ -375,25 +374,45 @@ function animateBoat() {
 
 
 const update = (delta) => {
+
     if (windForce.startSimulation == true) {
         orbit.update(delta);
 
         windForce.update();
     }
+    if (totalForce.startSimulation == true) {
+        orbit.update(delta);
+
+        totalForce.update();
+    }
 
 
     //   تحديث موقع المنطاد بناءا على الفيزياء 
-    const newPosition = new Vector3(
-        windForce.position.x,
-        windForce.position.y,
-        windForce.position.z,
+    // const newPosition = new Vector3(
+    // windForce.position.x,
+    // windForce.position.y,
+    // windForce.position.z,
+    // );
+
+
+    var v = new Vector3();
+    var newPosition = new Vector3(
+        0, 0, 0
+
     );
+    v.copy(totalForce.getPosition());
+    newPosition = new Vector3(
+        v.x,
+        v.y,
+        v.z
+
+    );
+
 
     // // التحقق من عدم تجاوز الحدود الداخلية للسكاي بوكس
     // const halfSkyboxSize = 2450; // نصف أبعاد السكاي بوكس
     // newPosition.clampScalar(-halfSkyboxSize, halfSkyboxSize);
 
-    // ballon.position.copy(newPosition);
     model.position.copy(newPosition);
 
     // تحديث موقع الكاميرا بناءً على الموقع الجديد للمنطاد
