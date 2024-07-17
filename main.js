@@ -384,7 +384,7 @@ const update = (delta) => {
     if (totalForce.startSimulation == true) {
         orbit.update(delta);
 
-        totalForce.update();
+        totalForce.update(delta);
     }
 
 

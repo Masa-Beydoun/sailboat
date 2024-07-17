@@ -32,6 +32,9 @@ class TotalForce {
         return allTF;
     }
 
+    update(delta) {
+        console.log("position", enviroment.position);
+        waterForce.update();
     update() {
 
         var delta = 0.01666666666666666666666666666667;

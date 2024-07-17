@@ -31,9 +31,9 @@ class Enviroment {
         this.besideVolume = 0;
 
         //boat variables
-        this.length = 4.2;
-        this.width = 1.39;
-        this.hight = 0.8;
+        this.length = 11.5;
+        this.width = 3.99;
+        this.hight = 1.95;
         this.surfaceAreaSpace = this.length * this.width;
         // this.velocity2 = 1000;
 
