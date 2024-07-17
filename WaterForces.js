@@ -32,6 +32,8 @@ class WaterForce {
 
         let buoyantForce = this.enviroment.waterDensity * this.enviroment.gravityConstant * submergedVolume;
 
+        let maxBuoyantForce = this.enviroment.waterDensity * this.enviroment.gravityConstant * this.enviroment.length * this.enviroment.width * this.enviroment.hight;
+        buoyantForce = Math.min(buoyantForce, maxBuoyantForce);
         return new Vector3(0, parseFloat(buoyantForce.toFixed(8)), 0);
     }
 
@@ -67,8 +69,10 @@ class WaterForce {
         //
         let relativeVelocity = this.enviroment.velocity.clone().sub(this.enviroment.WaterVelocity);
 
-        let spacFromY = this.enviroment.length * this.enviroment.width;
-        let spacFromX = this.enviroment.hight * this.enviroment.length;
+
+
+        let spacFromY = parseFloat((this.enviroment.length * this.enviroment.width).toFixed(8));
+        let spacFromX = parseFloat((this.enviroment.hight * this.enviroment.length).toFixed(8));
         let spacFromZ = this.enviroment.width * this.enviroment.hight;
 
         let waterResistanceMagnitudeY = 0.5 * this.enviroment.cd * this.enviroment.waterDensity * spacFromY * relativeVelocity.lengthSq();
@@ -96,11 +100,11 @@ class WaterForce {
         let firstY = this.calculateWeightOfBoat()
         firstY.add(this.calculateBuoyantForce());
         tf.add(firstY);
-        let secondY = this.calculateWaterResistance();
-        if (firstY.y > 0) {
-            secondY.multiplyScalar(-1);
-        }
-        tf = tf.add(secondY);
+        // let secondY = this.calculateWaterResistance();
+        // if (firstY.y > 0) {
+        // secondY.multiplyScalar(-1);
+        // }
+        // tf = tf.add(secondY);
         // tf = tf.add(this.calculateWaterForceXZ());
         // tf = tf.add(this.calculateWaterForce_X_Z());
 
@@ -113,7 +117,7 @@ class WaterForce {
 
         console.log("weightVector", this.calculateWeightOfBoat());
         console.log("BuoyantForce", this.calculateBuoyantForce());
-        console.log("waterResistanceVector", this.calculateWaterResistance());
+        // console.log("waterResistanceVector", this.calculateWaterResistance());
         // console.log("WaterForceX", this.calculateWaterForceXZ());
         // console.log("WaterForceZ", this.calculateWaterForce_X_Z());
 
@@ -142,7 +146,7 @@ class WaterForce {
         parseFloat(this.enviroment.position.z.toFixed(8));
         console.log('newwwwwwwwwwwwwwwwwwwwww');
         // Apply damping to simulate water resistance
-        // this.velocity.multiplyScalar(0.99);
+        this.enviroment.velocity.multiplyScalar(0.9);
     }
 
 

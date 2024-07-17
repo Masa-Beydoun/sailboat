@@ -61,6 +61,7 @@ loader.load(
 
         scene.add(model);
         model.scale.set(0.1, 0.1, 0.1);
+
         const mixer = new THREE.AnimationMixer(model);
         gltf.animations.forEach((clip) => {
             mixer.clipAction(clip).play();
@@ -383,7 +384,7 @@ const update = (delta) => {
     if (totalForce.startSimulation == true) {
         orbit.update(delta);
 
-        totalForce.update();
+        totalForce.update(delta);
     }
 
 

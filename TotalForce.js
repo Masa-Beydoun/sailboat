@@ -22,7 +22,7 @@ class TotalForce {
             .name("start simulation ");
     }
 
-    update() {
+    update(delta) {
         console.log("position", enviroment.position);
         waterForce.update();
     }
