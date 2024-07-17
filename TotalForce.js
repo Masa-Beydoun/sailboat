@@ -15,13 +15,6 @@ class TotalForce {
 
     constructor() {
 
-        this.startSimulation = false;
-
-        this.gui = new dat.GUI();
-
-        this.gui
-            .add(this, "startSimulation")
-            .name("start simulation ");
     }
 
     calculateTotalForces() {
@@ -79,6 +72,9 @@ class TotalForce {
     }
 
 
+    getStartSimulation() {
+        return enviroment.startSimulation;
+    }
 }
 
 export default TotalForce;

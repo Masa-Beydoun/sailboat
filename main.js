@@ -381,7 +381,7 @@ const update = (delta) => {
 
     //     windForce.update();
     // }
-    if (totalForce.startSimulation == true) {
+    if (totalForce.getStartSimulation() == true) {
         orbit.update(delta);
 
         totalForce.update(delta);
