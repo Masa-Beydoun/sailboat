@@ -28,7 +28,7 @@ import { depth, mod, reflect, textureLoad } from 'three/examples/jsm/nodes/Nodes
 import { TextureLoader } from 'three/src/Three.js';
 import { FlyControls } from 'three/addons/controls/FlyControls.js';
 
-import WindForces from "./WindForces";
+// import WindForces from "./WindForces";
 import TotalForce from "./TotalForce"
 
 
@@ -38,7 +38,7 @@ const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerH
 const renderer = new THREE.WebGLRenderer();
 const orbit = new OrbitControls(camera, renderer.domElement);
 
-const windForce = new WindForces();
+// const windForce = new WindForces();
 const totalForce = new TotalForce();
 
 var cameraOffset = new Vector3(0, 10, -60);
@@ -376,11 +376,11 @@ function animateBoat() {
 
 const update = (delta) => {
 
-    if (windForce.startSimulation == true) {
-        orbit.update(delta);
+    // if (windForce.startSimulation == true) {
+    //     orbit.update(delta);
 
-        windForce.update();
-    }
+    //     windForce.update();
+    // }
     if (totalForce.startSimulation == true) {
         orbit.update(delta);
 
@@ -389,25 +389,29 @@ const update = (delta) => {
 
 
     //   تحديث موقع المنطاد بناءا على الفيزياء 
-    // const newPosition = new Vector3(
-    // windForce.position.x,
-    // windForce.position.y,
-    // windForce.position.z,
-    // );
-
-
-    var v = new Vector3();
     var newPosition = new Vector3(
-        0, 0, 0
-
+    totalForce.getPosition().x,
+    totalForce.getPosition().y,
+    totalForce.getPosition().z,
     );
-    v.copy(totalForce.getPosition());
-    newPosition = new Vector3(
-        v.x,
-        v.y,
-        v.z
 
-    );
+    model.position.copy(newPosition);
+
+    
+
+
+    // var v = new Vector3();
+    // newPosition = new Vector3(
+    //     0, 0, 0
+
+    // );
+    // v.copy(totalForce.getPosition());
+    // newPosition = new Vector3(
+    //     v.x,
+    //     v.y,
+    //     v.z
+
+    // );
 
 
     // // التحقق من عدم تجاوز الحدود الداخلية للسكاي بوكس
