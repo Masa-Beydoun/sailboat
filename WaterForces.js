@@ -44,39 +44,23 @@ class WaterForce {
 
 
     calculateWaterForceXZ() {
-        // let relativeVelocity = this.enviroment.velocity.clone();
-        // relativeVelocity.x += this.enviroment.WaterVelocity.x;
+        let relativeVelocity = this.enviroment.velocity.clone();
+        relativeVelocity.x += this.enviroment.WaterVelocity.x;
 
-        let waterForce = 0.5 * this.enviroment.cd * this.enviroment.waterDensity * this.enviroment.surfaceAreaSpace * Math.pow(this.enviroment.WaterVelocity.x, 2);
+        let waterForce = 0.5 * this.enviroment.cd * this.enviroment.waterDensity * this.enviroment.surfaceAreaSpace * Math.pow(relativeVelocity.x, 2);
         // قوة الماء =  معامل السحب الديناميكي × كثافة الماء × مساحة السطح المتأثر × سرعة الماء للتربيع 
 
 
         let relativeVelocityZ = this.enviroment.velocity.clone();
         relativeVelocityZ.z += this.enviroment.waterSpeedZ;
 
-        let waterForceZ = 0.5 * this.enviroment.cd * this.enviroment.waterDensity * this.enviroment.surfaceAreaSpace * Math.pow(this.enviroment.WaterVelocity.z, 2);
+        let waterForceZ = 0.5 * this.enviroment.cd * this.enviroment.waterDensity * this.enviroment.surfaceAreaSpace * Math.pow(relativeVelocity.z, 2);
 
         let waterForceVector = new Vector3(parseFloat(waterForce.toFixed(8)), 0, parseFloat(waterForceZ.toFixed(8)));
 
         return waterForceVector;
     }
 
-    calculateWaterForce_X_Z() {
-        // let relativeVelocity = this.enviroment.velocity.clone();
-        // console.log('relativeVelocity ' + relativeVelocity);
-        // relativeVelocity.x += this.enviroment.waterSpeed_X;
-
-        let waterForce = 0.5 * this.enviroment.cd * this.enviroment.waterDensity * this.enviroment.surfaceAreaSpace * (-1) * Math.pow(this.enviroment.WaterVelocity.x, 2);
-
-        //z part
-        // let relativeVelocityZ = this.enviroment.velocity.clone();
-        // relativeVelocityZ.z += this.enviroment.waterSpeed_Z;
-
-        let waterForceZ = 0.5 * this.enviroment.cd * this.enviroment.waterDensity * this.enviroment.surfaceAreaSpace * Math.pow(this.enviroment.WaterVelocity.z, 2);
-
-        let waterForceVector = new Vector3(-waterForce.toFixed(8), 0, -waterForceZ.toFixed(8));
-        return waterForceVector;
-    }
 
     calculateWaterResistance() {
         // Calculate the relative velocity
@@ -109,10 +93,14 @@ class WaterForce {
 
     totalForce() {
         let tf = new Vector3(0, 0, 0);
-        tf = tf.add(this.calculateWeightOfBoat());
-        tf = tf.add(this.calculateBuoyantForce());
-        console.log("total", tf);
-        // tf = tf.add(this.calculateWaterResistance());
+        let firstY = this.calculateWeightOfBoat()
+        firstY.add(this.calculateBuoyantForce());
+        tf.add(firstY);
+        let secondY = this.calculateWaterResistance();
+        if (firstY.y > 0) {
+            secondY.multiplyScalar(-1);
+        }
+        tf = tf.add(secondY);
         // tf = tf.add(this.calculateWaterForceXZ());
         // tf = tf.add(this.calculateWaterForce_X_Z());
 
@@ -125,7 +113,7 @@ class WaterForce {
 
         console.log("weightVector", this.calculateWeightOfBoat());
         console.log("BuoyantForce", this.calculateBuoyantForce());
-        // console.log("waterResistanceVector", this.calculateWaterResistance());
+        console.log("waterResistanceVector", this.calculateWaterResistance());
         // console.log("WaterForceX", this.calculateWaterForceXZ());
         // console.log("WaterForceZ", this.calculateWaterForce_X_Z());
 
@@ -134,13 +122,21 @@ class WaterForce {
 
         var totalMass = this.enviroment.equipmentMass + this.enviroment.passengerMass;
         this.enviroment.accelration.copy(tf).divideScalar(totalMass);
+        parseFloat(this.enviroment.accelration.x.toFixed(8));
+        parseFloat(this.enviroment.accelration.y.toFixed(8));
+        parseFloat(this.enviroment.accelration.z.toFixed(8));
         console.log("accelaration", this.enviroment.accelration);
 
         // Update velocity
         this.enviroment.velocity.add(this.enviroment.accelration.clone().multiplyScalar(deltaTime));
+
+        parseFloat(this.enviroment.velocity.x.toFixed(8));
+        parseFloat(this.enviroment.velocity.y.toFixed(8));
+        parseFloat(this.enviroment.velocity.z.toFixed(8));
         console.log("velocity", this.enviroment.velocity);
         // Update position
         this.enviroment.position.add(this.enviroment.velocity.clone().multiplyScalar(deltaTime));
+
         parseFloat(this.enviroment.position.x.toFixed(8));
         parseFloat(this.enviroment.position.y.toFixed(8));
         parseFloat(this.enviroment.position.z.toFixed(8));
