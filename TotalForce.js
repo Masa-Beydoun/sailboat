@@ -32,16 +32,13 @@ class TotalForce {
         return allTF;
     }
 
-    update(delta) {
-        console.log("position", enviroment.position);
-        waterForce.update();
     update() {
 
         var delta = 0.01666666666666666666666666666667;
         var tf = this.calculateTotalForces();
 
         console.log("weightVector", windForces.calculateWeightOfBoat());
-        console.log("airResistanceVector", windForces.calculateAirResistance());
+        // console.log("airResistanceVector", windForces.calculateAirResistance());
         console.log("BuoyantForce", waterForce.calculateBuoyantForce());
         console.log("waterResistanceVector", waterForce.calculateWaterResistance());
 
@@ -50,13 +47,12 @@ class TotalForce {
         enviroment.accelration = enviroment.accelration.add(tf.multiplyScalar(delta).divideScalar(totalMass));
         console.log("accelaration", enviroment.accelration);
 
-        
         // Update velocity
-        enviroment.velocity.add(enviroment.accelration.clone().multiplyScalar(deltaTime));
+        enviroment.velocity.add(enviroment.accelration.clone().multiplyScalar(delta));
         console.log("velocity", enviroment.velocity);
 
         // Update position
-        this.enviroment.position.add(enviroment.velocity.clone().multiplyScalar(deltaTime));
+        enviroment.position.add(enviroment.velocity.clone().multiplyScalar(delta));
 
 
 

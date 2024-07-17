@@ -26,6 +26,7 @@ class Enviroment {
 
         //position,velocity,accelration for boat
         this.position = new Vector3(0, 0, 0);
+        // this.position = 0;
         this.velocity = new Vector3(0, 0, 0);
         this.accelration = new Vector3(0, 0, 0);
         this.besideVolume = 0;
@@ -52,15 +53,15 @@ class Enviroment {
 
         // متغيرات قوة دفع الهواء
         this.airThrustConstant = 1;
-        // this.velocity = 1000;
+        this.velocity = 1000;
         // this.position = new Vector3(0, 0, 0);
-        // this.velocity = new Vector3(0, 0, 0);
+        this.velocity = new Vector3(0, 0, 0);
         // this.accelration = new Vector3(0, 0, 0);
 
         //متغيرات قوة مقاومة الهواء
         this.airResistanceConstant = 1;
         // this.airDensity = 1.225;
-        this.velocity = 1000;
+        // this.velocity = 1000;
         // this.velocity = new Vector3(0, 0, 0);
         // this.accelration = new Vector3(0, 0, 0);
 

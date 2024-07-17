@@ -390,9 +390,9 @@ const update = (delta) => {
 
     //   تحديث موقع المنطاد بناءا على الفيزياء 
     var newPosition = new Vector3(
-    windForce.position.x,
-    windForce.position.y,
-    windForce.position.z,
+    totalForce.getPosition().x,
+    totalForce.getPosition().y,
+    totalForce.getPosition().z,
     );
 
     model.position.copy(newPosition);

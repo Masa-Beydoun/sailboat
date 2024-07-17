@@ -133,12 +133,13 @@ class WindForces {
 
     calculateAirResistance() {
         var airDensityOutside = this.enviroment.airDensity;
+        var v = this.enviroment.velocity.lengthSq();
         var airResistance =
             0.5 *
             this.enviroment.airResistanceConstant *
             airDensityOutside *
             this.enviroment.surfaceArea *
-            this.enviroment.velocity.lengthSq();
+            v;
         var airResistanceVector;
         if (this.enviroment.position.y > 3750) {
             airResistanceVector = new Vector3(0, -airResistance, 0);
@@ -161,7 +162,7 @@ class WindForces {
 
     totalForce() {
         var tf = new Vector3(0, 0, 0);
-        tf = tf.add(this.calculateWeightOfBoat());
+        // tf = tf.add(this.calculateWeightOfBoat());
         tf = tf.add(this.calculateAirResistance());
         tf = tf.add(this.calculateWindForceX());
         tf = tf.add(this.calculateWindForceZ());
@@ -174,7 +175,7 @@ class WindForces {
     update() {
         var delta = 0.01666666666666666666666666666667;
         var tf = this.totalForce();
-        
+
         console.log("weightVector", this.calculateWeightOfBoat());
         console.log("airResistanceVector", this.calculateAirResistance());
         this.accelration = this.accelration.add(tf.multiplyScalar(delta).divideScalar(this.enviroment.equipmentMass + this.enviroment.passengerMass));

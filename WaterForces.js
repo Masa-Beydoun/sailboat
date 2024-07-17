@@ -97,7 +97,7 @@ class WaterForce {
 
     totalForce() {
         let tf = new Vector3(0, 0, 0);
-        let firstY = this.calculateWeightOfBoat()
+        let firstY = this.calculateWeightOfBoat();
         firstY.add(this.calculateBuoyantForce());
         tf.add(firstY);
         // let secondY = this.calculateWaterResistance();
