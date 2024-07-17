@@ -10,13 +10,13 @@ class Enviroment {
         this.startSimulation = false;
         //general variables
         this.passengerMass = 300;//1000
-        this.equipmentMass = 7000 ;//14000 // Boat mass
+        this.equipmentMass = 7000;//14000 // Boat mass
         this.gravityConstant = 9.81;
         this.waterDensity = 1000;
         this.airDensity = 1.225;
         this.surfaceArea = 37.04; //8000
         // this.surfaceArea = 37.04;
-        
+
         // سرعة الرياح 
         this.windSpeedX = 1;
         this.windSpeed_X = 1;
@@ -65,7 +65,7 @@ class Enviroment {
         // this.velocity = new Vector3(0, 0, 0);
         // this.accelration = new Vector3(0, 0, 0);
 
-    
+
 
     }
     addToGui() {

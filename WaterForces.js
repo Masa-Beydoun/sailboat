@@ -119,12 +119,9 @@ class WaterForce {
         // console.log("WaterForceX", this.calculateWaterForceXZ());
         // console.log("WaterForceZ", this.calculateWaterForce_X_Z());
 
-
-
-
         var totalMass = this.enviroment.equipmentMass + this.enviroment.passengerMass;
         this.enviroment.accelration.copy(tf).divideScalar(totalMass);
-        
+
         parseFloat(this.enviroment.accelration.x.toFixed(8));
         parseFloat(this.enviroment.accelration.y.toFixed(8));
         parseFloat(this.enviroment.accelration.z.toFixed(8));
@@ -137,7 +134,7 @@ class WaterForce {
         parseFloat(this.enviroment.velocity.y.toFixed(8));
         parseFloat(this.enviroment.velocity.z.toFixed(8));
         console.log("velocity", this.enviroment.velocity);
-        
+
         // Update position
         this.enviroment.position.add(this.enviroment.velocity.clone().multiplyScalar(deltaTime));
 
