@@ -69,8 +69,6 @@ class WaterForce {
         //
         let relativeVelocity = this.enviroment.velocity.clone().sub(this.enviroment.WaterVelocity);
 
-
-
         let spacFromY = parseFloat((this.enviroment.length * this.enviroment.width).toFixed(8));
         let spacFromX = parseFloat((this.enviroment.hight * this.enviroment.length).toFixed(8));
         let spacFromZ = this.enviroment.width * this.enviroment.hight;
@@ -100,7 +98,7 @@ class WaterForce {
         let firstY = this.calculateWeightOfBoat()
         firstY.add(this.calculateBuoyantForce());
         tf.add(firstY);
-        // let secondY = this.calculateWaterResistance();
+        let secondY = this.calculateWaterResistance();
         // if (firstY.y > 0) {
         // secondY.multiplyScalar(-1);
         // }
