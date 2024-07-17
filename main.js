@@ -28,7 +28,7 @@ import { depth, mod, reflect, textureLoad } from 'three/examples/jsm/nodes/Nodes
 import { TextureLoader } from 'three/src/Three.js';
 import { FlyControls } from 'three/addons/controls/FlyControls.js';
 
-import WindForces from "./WindForces";
+// import WindForces from "./WindForces";
 import TotalForce from "./TotalForce"
 
 
@@ -38,7 +38,7 @@ const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerH
 const renderer = new THREE.WebGLRenderer();
 const orbit = new OrbitControls(camera, renderer.domElement);
 
-const windForce = new WindForces();
+// const windForce = new WindForces();
 const totalForce = new TotalForce();
 
 var cameraOffset = new Vector3(0, 10, -60);
@@ -59,14 +59,9 @@ loader.load(
             1
         );
 
-       scene.add(model);
-       model.scale.set(0.1,0.1,0.1);
-       
-       const mixer = new THREE.AnimationMixer(model);
-       gltf.animations.forEach((clip) => {
-           mixer.clipAction(clip).play();
         scene.add(model);
         model.scale.set(0.1, 0.1, 0.1);
+
         const mixer = new THREE.AnimationMixer(model);
         gltf.animations.forEach((clip) => {
             mixer.clipAction(clip).play();
@@ -91,7 +86,6 @@ orbit.update();
 const textureLoader = new THREE.TextureLoader();
 const axeHelper = new THREE.AxesHelper(5);
 scene.add(axeHelper);
-camera.position.set(0,100,100);
 camera.position.set(0, 2, 5);
 
 
@@ -353,13 +347,13 @@ water5.position.set(-60, 0, 0);
 scene.add(water5);
 
 
-// const boxGeometry = new THREE.BoxGeometry(5, 2, 3);
-// const boxMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 }); // Adjust the color as needed
-// const box = new THREE.Mesh(boxGeometry, boxMaterial);
+const boxGeometry = new THREE.BoxGeometry(5, 2, 3);
+const boxMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 }); // Adjust the color as needed
+const box = new THREE.Mesh(boxGeometry, boxMaterial);
 
 // Set initial position of the box
-// box.position.set(0, 5, 0); // Adjust the position as needed to place it on the water surface
-// scene.add(box);
+box.position.set(0, 5, 0); // Adjust the position as needed to place it on the water surface
+scene.add(box);
 
 //window.addEventListener('resize', onWindowResize, false);
 //onWindowResize();
@@ -372,7 +366,6 @@ function animateBoat() {
     const waterDisplacement = Math.sin((boatPosition.x + boatPosition.z) / 10 + waterUniforms.time.value) * 0.5; // Adjust the parameters as needed for the desired effect
 
     // Update box position to simulate boat movement
-    // box.position.y = water5.position.y + waterDisplacement + 2-1; // Adjust the offset as needed to keep the box above the water surface
     box.position.y = water5.position.y + waterDisplacement + 2 - 1; // Adjust the offset as needed to keep the box above the water surface
 
     // Request animation frame
@@ -383,10 +376,11 @@ function animateBoat() {
 
 const update = (delta) => {
 
-    if (windForce.startSimulation == true) {
-        orbit.update(delta);
-        windForce.update();
-    }
+    // if (windForce.startSimulation == true) {
+    //     orbit.update(delta);
+
+    //     windForce.update();
+    // }
     if (totalForce.startSimulation == true) {
         orbit.update(delta);
 
@@ -395,25 +389,29 @@ const update = (delta) => {
 
 
     //   تحديث موقع المنطاد بناءا على الفيزياء 
-    // const newPosition = new Vector3(
-    // windForce.position.x,
-    // windForce.position.y,
-    // windForce.position.z,
-    // );
-
-
-    var v = new Vector3();
     var newPosition = new Vector3(
-        0, 0, 0
-
+    windForce.position.x,
+    windForce.position.y,
+    windForce.position.z,
     );
-    v.copy(totalForce.getPosition());
-    newPosition = new Vector3(
-        v.x,
-        v.y,
-        v.z
 
-    );
+    model.position.copy(newPosition);
+
+    
+
+
+    // var v = new Vector3();
+    // newPosition = new Vector3(
+    //     0, 0, 0
+
+    // );
+    // v.copy(totalForce.getPosition());
+    // newPosition = new Vector3(
+    //     v.x,
+    //     v.y,
+    //     v.z
+
+    // );
 
 
     // // التحقق من عدم تجاوز الحدود الداخلية للسكاي بوكس
@@ -422,10 +420,6 @@ const update = (delta) => {
 
     model.position.copy(newPosition);
 
-     // تحديث موقع الكاميرا بناءً على الموقع الجديد للمنطاد
-    //  camera.position.x = 2 * model.position.x +  cameraOffset.x -1 ;
-    //  camera.position.y = model.position.y + cameraOffset.y -1;
-    //  camera.position.z = 2 * model.position.z + cameraOffset.z -1;
     // تحديث موقع الكاميرا بناءً على الموقع الجديد للمنطاد
     //  camera.position.x = 2 * model.position.x +  cameraOffset.x ;
     //  camera.position.y = model.position.y + cameraOffset.y;

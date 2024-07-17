@@ -3,93 +3,94 @@ import { Vector3 } from "three";
 import * as dat from "dat.gui";
 
 class WindForces {
-    constructor() {
-        this.startSimulation = false;
+    constructor(enviroment) {
 
-        this.windSpeedX = 1;
-        this.windSpeed_X = 1;
-        this.windSpeedZ = 1;
-        this.windSpeed_Z = 1;
+        this.enviroment = enviroment
 
+        // this.startSimulation = false;
 
-        // متغيرات قوة دفع الهواء
-        this.surfaceArea = 8000;
-        this.airDensity = 1.225;
-        this.airThrustConstant = 1;
-        this.velocity = 1000;
-        this.position = new Vector3(0, 0, 0);
-        this.velocity = new Vector3(0, 0, 0);
-        this.accelration = new Vector3(0, 0, 0);
-
-        //متغيرات قوة مقاومة الهواء
-        this.airResistanceConstant = 1;
-        this.airDensity = 1.225;
-        this.surfaceArea = 15000;
-        this.velocity = 1000;
-        this.position = new Vector3(0, 0, 0);
-        this.velocity = new Vector3(0, 0, 0);
-        this.accelration = new Vector3(0, 0, 0);
-
-        // متغيرات قوة الثقل
-        this.passengerMass = 1000;
-        this.equipmentMass = 14000;
-
-        this.gravityConstant = 9.81;
+        // this.windSpeedX = 1;
+        // this.windSpeed_X = 1;
+        // this.windSpeedZ = 1;
+        // this.windSpeed_Z = 1;
 
 
-        this.gui = new dat.GUI();
-        // متغيرات قوة الثقل
-        this.gui
-            .add(this, "passengerMass")
-            .min(0)
-            .max(100000)
-            .step(1)
-            .name("passengerMass");
-        this.gui
-            .add(this, "equipmentMass")
-            .min(0)
-            .max(100000)
-            .step(1)
-            .name("equipmentMass");
+        // // متغيرات قوة دفع الهواء
+        // this.surfaceArea = 8000;
+        // this.airDensity = 1.225;
+        // this.airThrustConstant = 1;
+        // this.velocity = 1000;
+        // this.position = new Vector3(0, 0, 0);
+        // this.velocity = new Vector3(0, 0, 0);
+        // this.accelration = new Vector3(0, 0, 0);
+
+        // //متغيرات قوة مقاومة الهواء
+        // this.airResistanceConstant = 1;
+        // this.airDensity = 1.225;
+        // this.surfaceArea = 15000;
+        // this.velocity = 1000;
+        // this.position = new Vector3(0, 0, 0);
+        // this.velocity = new Vector3(0, 0, 0);
+        // // this.accelration = new Vector3(0, 0, 0);
+
+        // // متغيرات قوة الثقل
+        // this.passengerMass = 300;//1000
+        // this.equipmentMass = 7000 ;//14000
+
+        // this.gravityConstant = 9.81;
 
 
-        this.gui
-            .add(this, "windSpeedX")
-            .min(0)
-            .max(1000)
-            .step(1)
-            .name("windSpeedX ");
-        this.gui
-            .add(this, "windSpeedZ")
-            .min(0)
-            .max(1000)
-            .step(1)
-            .name("windSpeedZ ");
-        this.gui
-            .add(this, "windSpeed_X")
-            .min(0)
-            .max(1000)
-            .step(1)
-            .name("windSpeed-X ");
-        this.gui
-            .add(this, "windSpeed_Z")
-            .min(0)
-            .max(1000)
-            .step(1)
-            .name("windSpeed-Z ");
-        this.gui
-            .add(this, "startSimulation")
+        // this.gui = new dat.GUI();
+        // // متغيرات قوة الثقل
+        // this.gui
+        //     .add(this, "passengerMass")
+        //     .min(0)
+        //     .max(10000)
+        //     .step(1)
+        //     .name("passengerMass");
+        // this.gui
+        //     .add(this, "equipmentMass")
+        //     .min(0)
+        //     .max(10000)
+        //     .step(1)
+        //     .name("equipmentMass");
 
-            .name("start simulation ");
+
+        // this.gui
+        //     .add(this, "windSpeedX")
+        //     .min(0)
+        //     .max(400)
+        //     .step(1)
+        //     .name("windSpeedX ");
+        // this.gui
+        //     .add(this, "windSpeedZ")
+        //     .min(0)
+        //     .max(400)
+        //     .step(1)
+        //     .name("windSpeedZ ");
+        // this.gui
+        //     .add(this, "windSpeed_X")
+        //     .min(0)
+        //     .max(400)
+        //     .step(1)
+        //     .name("windSpeed-X ");
+        // this.gui
+        //     .add(this, "windSpeed_Z")
+        //     .min(0)
+        //     .max(400)
+        //     .step(1)
+        //     .name("windSpeed-Z ");
+        // this.gui
+        //     .add(this, "startSimulation")
+
+        //     .name("start simulation ");
     }
 
-
-
     calculateWindForceX() {
-        let relativeVelocity = this.velocity.clone();
-        relativeVelocity.x += this.windSpeedX;
+        let relativeVelocity = this.enviroment.velocity.clone();
+        relativeVelocity.x += this.enviroment.windSpeedX;
 
-        let windForce = 0.5 * this.airResistanceConstant * this.airDensity * this.surfaceArea * Math.pow(relativeVelocity.x, 2);
+        let windForce = 0.5 * this.enviroment.airResistanceConstant * this.enviroment.airDensity * this.enviroment.surfaceArea * Math.pow(relativeVelocity.x, 2);
         // قوة الهواء =  مقاومة الهواء × كثافة الهواء × مساحة السطح المتأثر × سرعة الهواء للتربيع 
 
         let windForceVector = new Vector3(windForce, 0, 0);
@@ -98,10 +99,10 @@ class WindForces {
     }
 
     calculateWindForce_X() {
-        let relativeVelocity = this.velocity.clone();
-        relativeVelocity.x += this.windSpeed_X;
+        let relativeVelocity = this.enviroment.velocity.clone();
+        relativeVelocity.x += this.enviroment.windSpeed_X;
 
-        let windForce = 0.5 * this.airResistanceConstant * this.airDensity * this.surfaceArea * Math.pow(relativeVelocity.x, 2);
+        let windForce = 0.5 * this.enviroment.airResistanceConstant * this.enviroment.airDensity * this.enviroment.surfaceArea * Math.pow(relativeVelocity.x, 2);
 
         let windForceVector = new Vector3(-windForce, 0, 0);
 
@@ -109,20 +110,20 @@ class WindForces {
     }
 
     calculateWindForceZ() {
-        let relativeVelocity = this.velocity.clone();
-        relativeVelocity.z += this.windSpeedZ;
+        let relativeVelocity = this.enviroment.velocity.clone();
+        relativeVelocity.z += this.enviroment.windSpeedZ;
 
-        let windForce = 0.5 * this.airResistanceConstant * this.airDensity * this.surfaceArea * Math.pow(relativeVelocity.z, 2);
+        let windForce = 0.5 * this.enviroment.airResistanceConstant * this.enviroment.airDensity * this.enviroment.surfaceArea * Math.pow(relativeVelocity.z, 2);
 
         let windForceVector = new Vector3(0, 0, windForce);
 
         return windForceVector;
     }
     calculateWindForce_Z() {
-        let relativeVelocity = this.velocity.clone();
-        relativeVelocity.z += this.windSpeed_Z;
+        let relativeVelocity = this.enviroment.velocity.clone();
+        relativeVelocity.z += this.enviroment.windSpeed_Z;
 
-        let windForce = 0.5 * this.airResistanceConstant * this.airDensity * this.surfaceArea * Math.pow(relativeVelocity.z, 2);
+        let windForce = 0.5 * this.enviroment.airResistanceConstant * this.enviroment.airDensity * this.enviroment.surfaceArea * Math.pow(relativeVelocity.z, 2);
 
         let windForceVector = new Vector3(0, 0, -windForce);
 
@@ -131,15 +132,15 @@ class WindForces {
 
 
     calculateAirResistance() {
-        var airDensityOutside = this.airDensity;
+        var airDensityOutside = this.enviroment.airDensity;
         var airResistance =
             0.5 *
-            this.airResistanceConstant *
+            this.enviroment.airResistanceConstant *
             airDensityOutside *
-            this.surfaceArea *
-            this.velocity.lengthSq();
+            this.enviroment.surfaceArea *
+            this.enviroment.velocity.lengthSq();
         var airResistanceVector;
-        if (this.position.y > 3750) {
+        if (this.enviroment.position.y > 3750) {
             airResistanceVector = new Vector3(0, -airResistance, 0);
         } else {
             airResistanceVector = new Vector3(0, airResistance, 0);
@@ -150,10 +151,10 @@ class WindForces {
 
     calculateWeightOfBoat() {
         // كتلة الحمولة = كتلة الركاب + كتلة المعدات
-        var boatMass = this.passengerMass + this.equipmentMass;
+        var boatMass = this.enviroment.passengerMass + this.enviroment.equipmentMass;
 
         // قوة الثقل = كتلة المنطاد × ثابت الجاذبية الأرضية
-        var weightOfBoat = boatMass * this.gravityConstant;
+        var weightOfBoat = boatMass * this.enviroment.gravityConstant;
         var weightVector = new Vector3(0, -weightOfBoat, 0);
         return weightVector;
     }
@@ -173,29 +174,34 @@ class WindForces {
     update() {
         var delta = 0.01666666666666666666666666666667;
         var tf = this.totalForce();
+        
         console.log("weightVector", this.calculateWeightOfBoat());
         console.log("airResistanceVector", this.calculateAirResistance());
-        this.accelration = this.accelration.add(tf.multiplyScalar(delta).divideScalar(this.equipmentMass + this.passengerMass));
+        this.accelration = this.accelration.add(tf.multiplyScalar(delta).divideScalar(this.enviroment.equipmentMass + this.enviroment.passengerMass));
         console.log("WindForceX", this.calculateWindForceX());
         console.log("WindForceZ", this.calculateWindForceZ());
 
 
-        this.velocity = this.velocity.add(
+        this.enviroment.velocity = this.enviroment.velocity.add(
             this.accelration.multiplyScalar(delta),
         );
 
 
         // if (!this.hasCollided) {
-        this.velocity = this.velocity.add(
-            this.accelration.multiplyScalar(delta),
+        this.enviroment.velocity = this.enviroment.velocity.add(
+            this.enviroment.accelration.multiplyScalar(delta),
         );
-        this.position = this.position.add(
-            this.velocity.multiplyScalar(delta),
+        this.enviroment.position = this.enviroment.position.add(
+            this.enviroment.velocity.multiplyScalar(delta),
         );
-        if (this.position.y <= 0) {
-            this.velocity.y *= -200; // ارتداد السرعة بمعامل تأثير
-            this.position.y = 10;
-            this.accelration.y = 0;
+
+
+        if (this.enviroment.position.y <= 0) {
+            this.enviroment.velocity.y *= -200; // ارتداد السرعة بمعامل تأثير
+            this.enviroment.position.y = 10;
+            this.enviroment.accelration.y = 0;
+
+
             // this.hasCollided = true; // تعيين المتغير للتصادم
             const endMessage = document.getElementById("endMessage");
             if (endMessage) {
@@ -203,7 +209,7 @@ class WindForces {
             }
         }
         // }
-        console.log("Positon", this.position);
+        console.log("Positon", this.enviroment.position);
     }
 }
 
