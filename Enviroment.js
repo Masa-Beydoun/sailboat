@@ -3,13 +3,18 @@ import { Vector3 } from "three";
 
 import * as dat from "dat.gui";
 
+
 class Enviroment {
     constructor() {
 
-
         this.startSimulation = false;
+
+
+        //Boat name : Beneteau Oceanis 38 (Cruising Sailboat)
+
+
         //general variables
-        this.passengerMass = 300;//1000
+        this.passengerMass = 300;//1000 // 300-500
         this.equipmentMass = 7000;//14000 // Boat mass
         this.gravityConstant = 9.81;
         this.waterDensity = 1000;
@@ -49,6 +54,7 @@ class Enviroment {
         // متغيرات قوة برنولي
         this.p0 = 13;
         this.v0 = 13;
+        this.boatDepth = 0;
 
 
         // متغيرات قوة دفع الهواء
@@ -124,9 +130,8 @@ class Enviroment {
             .add(this, "startSimulation")
 
             .name("start simulation ");
-
-
     }
+
 }
 
 export default Enviroment;
