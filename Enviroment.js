@@ -36,11 +36,22 @@ class Enviroment {
         this.accelration = new Vector3(0, 0, 0);
         this.besideVolume = 0;
 
+
+
+        //rotational dynamics
+        this.angularVelocity = new Vector3(0, 0, 0);
+        this.torque = new Vector3(0, 0, 0);
+        this.rotation = new Euler(0, 0, 0);
+        this.momentOfInertia = new Vector3(0, 0, 0);
+
+
+
         //boat variables
         this.length = 11.5;
         this.width = 3.99;
         this.hight = 1.95;
         this.surfaceAreaSpace = this.length * this.width;
+
         // this.velocity2 = 1000;
 
         //water speed

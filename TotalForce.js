@@ -9,13 +9,12 @@ enviroment.addToGui();
 
 const waterForce = new WaterForce(enviroment);
 const windForces = new WindForces(enviroment);
+const rotationalDynamics = new RotationalDynamics(enviroment);
 
 
 class TotalForce {
 
-    constructor() {
-
-    }
+    constructor() { }
 
     calculateTotalForces() {
         var allTF = new Vector3(0, 0, 0);
@@ -42,25 +41,16 @@ class TotalForce {
         var totalMass = enviroment.equipmentMass + enviroment.passengerMass;
         enviroment.accelration.copy(tf).divideScalar(totalMass);
 
-        // parseFloat(enviroment.accelration.x.toFixed(8));
-        // parseFloat(enviroment.accelration.y.toFixed(8));
-        // parseFloat(enviroment.accelration.z.toFixed(8));
         console.log("accelaration", enviroment.accelration);
 
         // Update velocity
         enviroment.velocity.add(enviroment.accelration.clone().multiplyScalar(deltaTime));
 
-        // parseFloat(enviroment.velocity.x.toFixed(8));
-        // parseFloat(enviroment.velocity.y.toFixed(8));
-        // parseFloat(enviroment.velocity.z.toFixed(8));
         console.log("velocity", enviroment.velocity);
 
         // Update position
         enviroment.position.add(enviroment.velocity.clone().multiplyScalar(deltaTime));
 
-        // parseFloat(enviroment.position.x.toFixed(8));
-        // parseFloat(enviroment.position.y.toFixed(8));
-        // parseFloat(enviroment.position.z.toFixed(8));
         console.log('newwwwwwwwwwwwwwwwwwwwww');
         // Apply damping to simulate water resistance
         enviroment.velocity.multiplyScalar(0.9);
@@ -72,7 +62,9 @@ class TotalForce {
     getPosition() {
         return enviroment.position;
     }
-
+    getRotation() {
+        return rotationalDynamics.rotation;
+    }
 
     getStartSimulation() {
         return enviroment.startSimulation;
