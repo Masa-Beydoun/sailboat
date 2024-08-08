@@ -152,10 +152,9 @@ class WindForces {
 
     calculateWeightOfBoat() {
         // كتلة الحمولة = كتلة الركاب + كتلة المعدات
-        var boatMass = this.enviroment.passengerMass + this.enviroment.equipmentMass;
 
         // قوة الثقل = كتلة المنطاد × ثابت الجاذبية الأرضية
-        var weightOfBoat = boatMass * this.enviroment.gravityConstant;
+        var weightOfBoat = this.enviroment.totalMass * this.enviroment.gravityConstant;
         var weightVector = new Vector3(0, -weightOfBoat, 0);
         return weightVector;
     }
@@ -178,7 +177,7 @@ class WindForces {
 
         console.log("weightVector", this.calculateWeightOfBoat());
         console.log("airResistanceVector", this.calculateAirResistance());
-        this.accelration = this.accelration.add(tf.multiplyScalar(delta).divideScalar(this.enviroment.equipmentMass + this.enviroment.passengerMass));
+        this.accelration = this.accelration.add(tf.multiplyScalar(delta).divideScalar(this.enviroment.totalMass));
         console.log("WindForceX", this.calculateWindForceX());
         console.log("WindForceZ", this.calculateWindForceZ());
 

@@ -39,8 +39,7 @@ class WaterForce {
 
     calculateWeightOfBoat() {
         // كتلة الحمولة = كتلة الركاب + كتلة المعدات
-        var totalMass = this.enviroment.equipmentMass + this.enviroment.passengerMass;
-        var weightOfBoat = totalMass * this.enviroment.gravityConstant;
+        var weightOfBoat = this.enviroment.totalMass * this.enviroment.gravityConstant;
         return new Vector3(0, parseFloat(-weightOfBoat.toFixed(8)), 0);
     }
 
@@ -126,8 +125,7 @@ class WaterForce {
         console.log("waterResistanceVector", this.calculateWaterResistance());
 
 
-        var totalMass = this.enviroment.equipmentMass + this.enviroment.passengerMass;
-        this.enviroment.accelration.copy(tf).divideScalar(totalMass);
+        this.enviroment.accelration.copy(tf).divideScalar(this.enviroment.totalMass);
         // Update velocity
         this.enviroment.velocity.add(this.enviroment.accelration.clone().multiplyScalar(deltaTime));
         // Update position

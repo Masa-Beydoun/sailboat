@@ -4,6 +4,7 @@ import Enviroment from "./Enviroment";
 import { Vector3 } from "three";
 import * as dat from "dat.gui";
 import WindForces from "./WindForces";
+import RotationalDynamics from "./WindForces";
 const enviroment = new Enviroment();
 enviroment.addToGui();
 
@@ -25,7 +26,12 @@ class TotalForce {
     }
 
     update() {
+        //updating variables
+        enviroment.updateTotalMass();
+        enviroment.calculateMomentOfInertia();
+        enviroment.updateWaterDensity();
 
+        //calculating forces
         var deltaTime = 0.01666666666666666666666666666667;
         var tf = this.calculateTotalForces();
 
