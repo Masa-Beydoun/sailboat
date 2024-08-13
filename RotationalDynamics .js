@@ -18,7 +18,7 @@ class RotationalDynamics {
         const force = waterForce.calculateWaterForceZ();
         const pointOfApplication = new Vector3(0, 0, -this.enviroment.length / 2);
 
-        this.enviroment.torque.z = force.z * pointOfApplication.z;
+        this.enviroment.torque.z = force.z * pointOfApplication.z * this.enviroment.dfa;
         console.log("torque ", this.enviroment.torque);
     }
 

@@ -1,5 +1,5 @@
 import WaterForce from "./WaterForces";
-import Enviroment from "./Enviroment";
+import Enviroment from "./Environment";
 import { Vector3 } from "three";
 import WindForces from "./WindForces";
 import RotationalDynamics from "./RotationalDynamics ";
@@ -28,9 +28,7 @@ class TotalForce {
 
     update() {
         //updating variables
-        enviroment.updateTotalMass();
-        enviroment.calculateMomentOfInertia();
-        enviroment.updateWaterDensity();
+        enviroment.updateValues();
 
 
         this.MAX_VALUE = 99999999;

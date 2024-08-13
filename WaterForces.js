@@ -1,6 +1,6 @@
 import { Vector3 } from "three";
 
-import Enviroment from "./Enviroment";
+import Enviroment from "./Environment";
 import { lerp } from "three/src/math/MathUtils.js";
 
 class WaterForce {
@@ -14,7 +14,7 @@ class WaterForce {
 
     calculateBuoyantForce() {
         //قوة الطفو = كثافة المي * ثابت الجاذبية الأرضية * حجم السائل المزاح
-        let yPosition = this.enviroment.position.y; // Assume y=0 is the water surface level
+        let yPosition = this.enviroment.position.y;
 
         if (yPosition > this.enviroment.hight / 2) {
             this.enviroment.boatDepth = 0;
@@ -42,12 +42,7 @@ class WaterForce {
         var weightOfBoat = this.enviroment.totalMass * this.enviroment.gravityConstant;
         return new Vector3(0, parseFloat(-weightOfBoat.toFixed(8)), 0);
     }
-    calculateWaterForceXZ() {
-        let tf = new Vector3(0, 0, 0);
-        tf.add(this.calculateWaterForceX());
-        tf.add(this.calculateWaterForceZ());
-        return tf;
-    }
+
     calculateWaterForceZ() {
 
         let relativeVelocity = this.enviroment.WaterVelocity.clone();
@@ -122,13 +117,11 @@ class WaterForce {
 
     totalForce() {
         let tf = new Vector3(0, 0, 0);
-        let firstY = this.calculateWeightOfBoat();
-        firstY.add(this.calculateBuoyantForce());
-        tf.add(firstY);
-        let secondY = this.calculateWaterResistance();
-        tf = tf.add(secondY);
-        tf = tf.add(this.calculateWaterForceXZ());
-
+        tf.add(this.calculateBuoyantForce());
+        tf.add(this.calculateWeightOfBoat());
+        tf.add(this.calculateWaterResistance());
+        tf.add(this.calculateWaterForceZ());
+        tf.add(this.calculateWaterForceX());
         return tf;
     }
 

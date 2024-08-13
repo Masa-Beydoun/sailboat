@@ -4,7 +4,7 @@ import { Vector3 } from "three";
 import * as dat from "dat.gui";
 
 
-class Enviroment {
+class Environment {
     constructor() {
 
         this.startSimulation = false;
@@ -85,6 +85,8 @@ class Enviroment {
         // this.accelration = new Vector3(0, 0, 0);
 
 
+        this.dfa = 0;
+
 
         //متغيرات كثافة الماء
         this.temprature = 35;
@@ -95,8 +97,8 @@ class Enviroment {
     }
     addToGui() {
         this.gui = new dat.GUI();
-        // this.gui.add(this, "passengerMass").min(0).max(1000).step(10).name("passengerMass");
-        // this.gui.add(this, "equipmentMass").min(0).max(1000).step(10).name("equipmentMass");
+        this.gui.add(this, "passengerMass").min(0).max(10000).step(10).name("passengerMass");
+        this.gui.add(this, "equipmentMass").min(0).max(10000).step(10).name("equipmentMass");
         this.gui.add(this, "waterDensity").min(0).max(1000).step(1).name("waterDensity ");
         this.gui.add(this, "hight").min(0).max(10).step(1).name("hight");
         this.gui.add(this, "length").min(0).max(10).step(1).name("length");
@@ -108,14 +110,10 @@ class Enviroment {
         this.gui.add(this, "temprature").min(4).max(100).step(5).name("Water Temprature");
         this.gui.add(this, "salty").min(0).max(100).step(5).name("salty");
         this.gui.add(this, "pressure").min(0).max(10).step(1).name("Pressure");
-        // متغيرات قوة الثقل
-        this.gui.add(this, "passengerMass").min(0).max(10000).step(1).name("passengerMass");
-        this.gui.add(this, "equipmentMass").min(0).max(10000).step(1).name("equipmentMass");
         this.gui.add(this.windVelocity, 'x').min(-100).max(100).step(10).name("wind velocity x");
         this.gui.add(this.windVelocity, 'z').min(-100).max(100).step(10).name("wind velocity z");
-        this.gui
-            .add(this, "startSimulation")
-            .name("start simulation ");
+        this.gui.add(this, "dfa").min(-1).max(1).step(1).name("dfa");
+        this.gui.add(this, "startSimulation").name("start simulation ");
     }
     updateWaterDensity() {
 
@@ -146,7 +144,7 @@ class Enviroment {
         // console.log("rho", rho);
 
     }
-    calculateMomentOfInertia() {
+    updateeMomentOfInertia() {
         this.momentOfInertia.x = (1 / 12) * this.totalMass * (this.hight ** 2 + this.width ** 2);
         this.momentOfInertia.y = (1 / 12) * this.totalMass * (this.length ** 2 + this.hight ** 2);
         this.momentOfInertia.z = (1 / 12) * this.totalMass * (this.length ** 2 + this.width ** 2);
@@ -156,6 +154,12 @@ class Enviroment {
         this.totalMass = this.equipmentMass + this.passengerMass;
     }
 
+
+    updateValues() {
+        this.updateTotalMass();
+        this.updateWaterDensity();
+        this.updateeMomentOfInertia();
+    }
 }
 
-export default Enviroment;
+export default Environment;
