@@ -24,10 +24,7 @@ class Enviroment {
         // this.surfaceArea = 37.04;
 
         // سرعة الرياح 
-        this.windSpeedX = 1;
-        this.windSpeed_X = 1;
-        this.windSpeedZ = 1;
-        this.windSpeed_Z = 1;
+        this.windVelocity = new Vector3(0, 0, 0);
 
 
         //position,velocity,accelration for boat
@@ -38,12 +35,17 @@ class Enviroment {
         this.besideVolume = 0;
 
 
-
+        this.boatRotation = new Vector3(0, 0, 0);
         //rotational dynamics
         this.angularVelocity = new Vector3(0, 0, 0);
         this.angularAcceleration = new Vector3(0, 0, 0);
         this.momentOfInertia = new Vector3(0, 0, 0);
 
+
+        this.alpha = 0;
+        this.theta = 0;
+        this.boatAttackAngle = 0;
+        this.torque = new Vector3(0, 0, 0);
 
 
         //boat variables
@@ -55,7 +57,7 @@ class Enviroment {
         // this.velocity2 = 1000;
 
         //water speed
-        this.WaterVelocity = new Vector3(0, 1, 0);
+        this.WaterVelocity = new Vector3(0, 0, 0);
 
 
         //water forces variables
@@ -107,47 +109,12 @@ class Enviroment {
         this.gui.add(this, "salty").min(0).max(100).step(5).name("salty");
         this.gui.add(this, "pressure").min(0).max(10).step(1).name("Pressure");
         // متغيرات قوة الثقل
-        this.gui
-            .add(this, "passengerMass")
-            .min(0)
-            .max(10000)
-            .step(1)
-            .name("passengerMass");
-        this.gui
-            .add(this, "equipmentMass")
-            .min(0)
-            .max(10000)
-            .step(1)
-            .name("equipmentMass");
-
-
-        this.gui
-            .add(this, "windSpeedX")
-            .min(0)
-            .max(400)
-            .step(1)
-            .name("windSpeedX ");
-        this.gui
-            .add(this, "windSpeedZ")
-            .min(0)
-            .max(400)
-            .step(1)
-            .name("windSpeedZ ");
-        this.gui
-            .add(this, "windSpeed_X")
-            .min(0)
-            .max(400)
-            .step(1)
-            .name("windSpeed-X ");
-        this.gui
-            .add(this, "windSpeed_Z")
-            .min(0)
-            .max(400)
-            .step(1)
-            .name("windSpeed-Z ");
+        this.gui.add(this, "passengerMass").min(0).max(10000).step(1).name("passengerMass");
+        this.gui.add(this, "equipmentMass").min(0).max(10000).step(1).name("equipmentMass");
+        this.gui.add(this.windVelocity, 'x').min(-100).max(100).step(10).name("wind velocity x");
+        this.gui.add(this.windVelocity, 'z').min(-100).max(100).step(10).name("wind velocity z");
         this.gui
             .add(this, "startSimulation")
-
             .name("start simulation ");
     }
     updateWaterDensity() {
@@ -176,20 +143,14 @@ class Enviroment {
 
         // Total density calculation
         const rho = rhoPure + salinityContribution + pressureContribution;
-        console.log("rho", rho);
+        // console.log("rho", rho);
 
     }
     calculateMomentOfInertia() {
-        //TODO
-        const length = this.length;
-        const width = this.width;
-        const height = this.hight;
+        this.momentOfInertia.x = (1 / 12) * this.totalMass * (this.hight ** 2 + this.width ** 2);
+        this.momentOfInertia.y = (1 / 12) * this.totalMass * (this.length ** 2 + this.hight ** 2);
+        this.momentOfInertia.z = (1 / 12) * this.totalMass * (this.length ** 2 + this.width ** 2);
 
-        const Ix = (1 / 12) * this.totalMass * (height ** 2 + width ** 2);
-        const Iy = (1 / 12) * this.totalMass * (length ** 2 + height ** 2);
-        const Iz = (1 / 12) * this.totalMass * (length ** 2 + width ** 2);
-
-        return new Vector3(Ix, Iy, Iz);
     }
     updateTotalMass() {
         this.totalMass = this.equipmentMass + this.passengerMass;
