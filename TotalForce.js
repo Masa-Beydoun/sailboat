@@ -16,63 +16,32 @@ class TotalForce {
     constructor() { }
 
     calculateTotalForces() {
-        var allTF = new Vector3(0, 0, 0);
-        allTF = allTF.add(waterForce.totalForce());
-        console.log("water force", waterForce.totalForce());
-        allTF = allTF.add(windForces.totalForce());
-        console.log("wind force", windForces.totalForce());
-
-
-
-        allTF.x = parseFloat(allTF.x.toFixed(8));
-        allTF.y = parseFloat(allTF.y.toFixed(8));
-        allTF.z = parseFloat(allTF.z.toFixed(8));
+        let allTF = new Vector3();
+        allTF.add(waterForce.totalForce());
+        allTF.add(windForces.totalForce());
         return allTF;
     }
 
-
     calculateAcceleration() {
-        var tf = this.calculateTotalForces();
-        console.log("tf", tf);
-        enviroment.accelration.copy(tf).divideScalar(enviroment.totalMass);
-        enviroment.accelration.x = parseFloat(enviroment.accelration.x.toFixed(8));
-        enviroment.accelration.y = parseFloat(enviroment.accelration.y.toFixed(8));
-        enviroment.accelration.z = parseFloat(enviroment.accelration.z.toFixed(8));
-        console.log("acceleration", enviroment.accelration);
+        const tf = this.calculateTotalForces();
+        enviroment.acceleration.copy(tf).divideScalar(enviroment.totalMass);
     }
+
     calculateVelocity() {
-        // Update velocity
-        //Try equal
-        // console.log("accele", enviroment.accelration);
-        enviroment.velocity.add(enviroment.accelration.clone().multiplyScalar(enviroment.deltaTime));
-        enviroment.velocity.x = parseFloat(enviroment.velocity.x.toFixed(8));
-        enviroment.velocity.y = parseFloat(enviroment.velocity.y.toFixed(8));
-        enviroment.velocity.z = parseFloat(enviroment.velocity.z.toFixed(8));
-        console.log("velocity", enviroment.velocity);
-        enviroment.velocity.multiplyScalar(0.9);
+        enviroment.velocity.add(enviroment.acceleration.clone().multiplyScalar(enviroment.deltaTime));
+        enviroment.velocity.multiplyScalar(0.9); // Apply damping
     }
+
     calculatePosition() {
-        // Update position
         enviroment.position.add(enviroment.velocity.clone().multiplyScalar(enviroment.deltaTime));
-        enviroment.position.x = parseFloat(enviroment.position.x.toFixed(8));
-        enviroment.position.y = parseFloat(enviroment.position.y.toFixed(8));
-        enviroment.position.z = parseFloat(enviroment.position.z.toFixed(8));
-        console.log("position", enviroment.position);
-
     }
+
     update() {
-        //updating variables
         enviroment.updateValues();
-
-        // var this.enviroment.deltaTime = 0.01666666666666666666666666666667;
-
-
         this.calculateAcceleration();
         this.calculateVelocity();
         this.calculatePosition();
-
-        rotationalDynamics.update(waterForce.calculateWaterForceZ());
-        // console.log('newwwwwwwwwwwwwwwwwwwwww');
+        rotationalDynamics.update(waterForce.calculateWaterForceZ(), windForces.calculateWindForceX());
     }
 
 

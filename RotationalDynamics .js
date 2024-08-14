@@ -9,11 +9,13 @@ class RotationalDynamics {
 
 
 
-    calculateTorque(force) {
+    calculateTorque(zForce, xFroce) {
 
-        const pointOfApplication = new Vector3(0, 0, -this.enviroment.length / 2);
+        const pointOfApplication = new Vector3(this.enviroment.position.x + this.enviroment.hightc + this.enviroment.surfaceArea / 4, 0, this.enviroment.position.z - this.enviroment.length / 2);
 
-        this.enviroment.torque.z = force.z * pointOfApplication.z * this.enviroment.dfa;
+        this.enviroment.torque.z = zForce.z * pointOfApplication.z * this.enviroment.dfa;
+        this.enviroment.torque.x = xFroce.x * pointOfApplication.z;
+
         console.log("torque ", this.enviroment.torque);
     }
 
@@ -26,7 +28,7 @@ class RotationalDynamics {
         // (this.enviroment.angularVelocity.z + (this.enviroment.angularAcceleration.z * this.enviroment.deltaTime))
         // (this.enviroment.angularVelocity.z * variables.dt) + (0.5 * Math.pow(variables.dt,2) * this.enviroment.angularAcceleration.z)
     }
-    calculteVelocity() {
+    calculateVelocity() {
         this.enviroment.angularVelocity.add(this.enviroment.angularAcceleration.multiplyScalar(this.enviroment.deltaTime));
         // console.log("angular velocity", this.enviroment.velocity);
     }
@@ -50,10 +52,10 @@ class RotationalDynamics {
         }
     }
 
-    update(force) {
-        this.calculateTorque(force);
+    update(zForce, xForce) {
+        this.calculateTorque(zForce, xForce);
         this.calculateAcceleration();
-        this.calculteVelocity();
+        this.calculateVelocity();
         this.calculateTheta();
         this.updateRotation();
     }

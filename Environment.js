@@ -78,8 +78,8 @@ class Environment {
     }
     addToGui() {
         this.gui = new dat.GUI();
-        this.gui.add(this, "passengerMass").min(0).max(10000).step(10).name("passengerMass");
-        this.gui.add(this, "boatMass").min(0).max(10000).step(10).name("boat mass");
+        this.gui.add(this, "passengerMass").min(10).max(100000).step(100).name("passengerMass");
+        this.gui.add(this, "boatMass").min(10).max(100000).step(100).name("boat mass");
         this.gui.add(this, "waterDensity").min(0).max(1000).step(1).name("waterDensity ");
         this.gui.add(this, "hight").min(0).max(10).step(1).name("hight");
         this.gui.add(this, "length").min(0).max(10).step(1).name("length");
@@ -126,9 +126,9 @@ class Environment {
 
     }
     updateeMomentOfInertia() {
-        this.momentOfInertia.x = (1 / 12) * this.totalMass * (this.hight ** 2 + this.width ** 2);
-        this.momentOfInertia.y = (1 / 12) * this.totalMass * (this.length ** 2 + this.hight ** 2);
-        this.momentOfInertia.z = (1 / 12) * this.totalMass * (this.length ** 2 + this.width ** 2);
+        this.momentOfInertia.x = (1 / 12) * this.totalMass * (Math.pow(this.hight, 2) + Math.pow(this.width, 2));
+        this.momentOfInertia.y = (1 / 12) * this.totalMass * (Math.pow(this.length, 2) + Math.pow(this.hight, 2));
+        this.momentOfInertia.z = (1 / 12) * this.totalMass * (Math.pow(this.length, 2) + Math.pow(this.width, 2));
 
     }
     updateTotalMass() {
