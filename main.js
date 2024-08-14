@@ -443,7 +443,9 @@ export const main = () => {
         const delta = currentTime - lastTime;
         lastTime = currentTime;
 
-        update(delta);
+
+        var deltaTime = 0.01666666666666666666667
+        update(deltaTime);
         renderer.render(scene, camera);
     };
 

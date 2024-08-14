@@ -14,32 +14,30 @@ class Environment {
 
 
         //general variables
-        this.passengerMass = 300;//1000 // 300-500
-        this.equipmentMass = 7000;//14000 // Boat mass
-        this.totalMass = this.passengerMass + this.equipmentMass;
-        this.gravityConstant = 9.81;
-        this.waterDensity = 1000;
-        this.airDensity = 1.225;
+        this.passengerMass = 300;//1000 // 300-500 // kg
+        this.boatMass = 7000;//14000 //  //kg
+        this.totalMass = this.passengerMass + this.boatMass; //kg
+        this.gravityConstant = 9.81;  //   m/s^2
+        this.waterDensity = 1000;    //
+        this.airDensity = 1.225;     //
         this.surfaceArea = 37.04; //8000
-        // this.surfaceArea = 37.04;
 
         // سرعة الرياح 
-        this.windVelocity = new Vector3(0, 0, 0);
-
+        this.windVelocity = new Vector3(0, 0, 0);                  //
+        this.WaterVelocity = new Vector3(0, 0, 0);                 //
 
         //position,velocity,accelration for boat
-        this.position = new Vector3(0, 0, 0);
-        // this.position = 0;
-        this.velocity = new Vector3(0, 0, 0);
-        this.accelration = new Vector3(0, 0, 0);
+        this.position = new Vector3(0, 0, 0);                      //
+        this.velocity = new Vector3(0, 0, 0);                      //
+        this.accelration = new Vector3(0, 0, 0);                   //
         this.besideVolume = 0;
 
 
         this.boatRotation = new Vector3(0, 0, 0);
         //rotational dynamics
-        this.angularVelocity = new Vector3(0, 0, 0);
-        this.angularAcceleration = new Vector3(0, 0, 0);
-        this.momentOfInertia = new Vector3(0, 0, 0);
+        this.angularVelocity = new Vector3(0, 0, 0);                 //
+        this.angularAcceleration = new Vector3(0, 0, 0);             //
+        this.momentOfInertia = new Vector3(0, 0, 0);                 //
 
 
         this.alpha = 0;
@@ -49,20 +47,12 @@ class Environment {
 
 
         //boat variables
-        this.length = 11.5;
-        this.width = 3.99;
-        this.hight = 1.95;
-        this.surfaceAreaSpace = this.length * this.width;
+        this.length = 11.5;                                         //
+        this.width = 3.99;                                          // 
+        this.hight = 1.95;                                          // 
+        this.surfaceAreaSpace = this.length * this.width;           //
 
-        // this.velocity2 = 1000;
-
-        //water speed
-        this.WaterVelocity = new Vector3(0, 0, 0);
-
-
-        //water forces variables
-        this.besideVolume = 0.53;
-        this.cd = 0.1;
+        this.cd = 0.1;                                              //
 
         // متغيرات قوة برنولي
         this.p0 = 13;
@@ -72,33 +62,24 @@ class Environment {
 
         // متغيرات قوة دفع الهواء
         this.airThrustConstant = 1;
-        this.velocity = 1000;
-        // this.position = new Vector3(0, 0, 0);
-        this.velocity = new Vector3(0, 0, 0);
-        // this.accelration = new Vector3(0, 0, 0);
 
         //متغيرات قوة مقاومة الهواء
         this.airResistanceConstant = 1;
-        // this.airDensity = 1.225;
-        // this.velocity = 1000;
-        // this.velocity = new Vector3(0, 0, 0);
-        // this.accelration = new Vector3(0, 0, 0);
-
 
         this.dfa = 0;
-
-
         //متغيرات كثافة الماء
         this.temprature = 35;
         this.rho = 1000;
         this.salty = 35;
         this.pressure = 1;
 
+        this.deltaTime = 0.016666666666666666667;
+
     }
     addToGui() {
         this.gui = new dat.GUI();
         this.gui.add(this, "passengerMass").min(0).max(10000).step(10).name("passengerMass");
-        this.gui.add(this, "equipmentMass").min(0).max(10000).step(10).name("equipmentMass");
+        this.gui.add(this, "boatMass").min(0).max(10000).step(10).name("boat mass");
         this.gui.add(this, "waterDensity").min(0).max(1000).step(1).name("waterDensity ");
         this.gui.add(this, "hight").min(0).max(10).step(1).name("hight");
         this.gui.add(this, "length").min(0).max(10).step(1).name("length");
@@ -151,7 +132,7 @@ class Environment {
 
     }
     updateTotalMass() {
-        this.totalMass = this.equipmentMass + this.passengerMass;
+        this.totalMass = this.boatMass + this.passengerMass;
     }
 
 

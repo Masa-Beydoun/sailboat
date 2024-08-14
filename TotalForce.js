@@ -18,7 +18,11 @@ class TotalForce {
     calculateTotalForces() {
         var allTF = new Vector3(0, 0, 0);
         allTF = allTF.add(waterForce.totalForce());
+        console.log("water force", waterForce.totalForce());
         allTF = allTF.add(windForces.totalForce());
+        console.log("wind force", windForces.totalForce());
+
+
 
         allTF.x = parseFloat(allTF.x.toFixed(8));
         allTF.y = parseFloat(allTF.y.toFixed(8));
@@ -26,55 +30,49 @@ class TotalForce {
         return allTF;
     }
 
-    update() {
-        //updating variables
-        enviroment.updateValues();
 
-
-        this.MAX_VALUE = 99999999;
-        //calculating forces
-        var deltaTime = 0.01666666666666666666666666666667;
+    calculateAcceleration() {
         var tf = this.calculateTotalForces();
-        // rotationalDynamics.update();
-
-        rotationalDynamics.update();
-        // tf.x = Math.min(Math.max(tf.x, -this.MAX_VALUE), this.MAX_VALUE);
-        // tf.y = Math.min(Math.max(tf.y, -this.MAX_VALUE), this.MAX_VALUE);
-        // tf.z = Math.min(Math.max(tf.z, -this.MAX_VALUE), this.MAX_VALUE);
-
-        console.log("total force ", tf);
-        // console.log("weightVector", waterForce.calculateWeightOfBoat());
-        // console.log("airResistanceVector", windForces.calculateAirResistance());
-        // console.log("BuoyantForce", waterForce.calculateBuoyantForce());
-        // console.log("waterResistanceVector", waterForce.calculateWaterResistance());
-        // console.log("WaterForceXZ", waterForce.calculateWaterForceXZ());
-
-
-
+        console.log("tf", tf);
         enviroment.accelration.copy(tf).divideScalar(enviroment.totalMass);
         enviroment.accelration.x = parseFloat(enviroment.accelration.x.toFixed(8));
         enviroment.accelration.y = parseFloat(enviroment.accelration.y.toFixed(8));
         enviroment.accelration.z = parseFloat(enviroment.accelration.z.toFixed(8));
-        // console.log("accelaration", enviroment.accelration);
-
+        console.log("acceleration", enviroment.accelration);
+    }
+    calculateVelocity() {
         // Update velocity
-        enviroment.velocity.add(enviroment.accelration.clone().multiplyScalar(deltaTime));
+        //Try equal
+        // console.log("accele", enviroment.accelration);
+        enviroment.velocity.add(enviroment.accelration.clone().multiplyScalar(enviroment.deltaTime));
         enviroment.velocity.x = parseFloat(enviroment.velocity.x.toFixed(8));
         enviroment.velocity.y = parseFloat(enviroment.velocity.y.toFixed(8));
         enviroment.velocity.z = parseFloat(enviroment.velocity.z.toFixed(8));
-        // console.log("velocity", enviroment.velocity);
-
-        // Update position
-        enviroment.position.add(enviroment.velocity.clone().multiplyScalar(deltaTime));
-        parseFloat(enviroment.position.x.toFixed(8));
-        parseFloat(enviroment.position.y.toFixed(8));
-        parseFloat(enviroment.position.z.toFixed(8));
-        // console.log("position", enviroment.position);
-
-        // Apply damping to simulate water resistance
+        console.log("velocity", enviroment.velocity);
         enviroment.velocity.multiplyScalar(0.9);
+    }
+    calculatePosition() {
+        // Update position
+        enviroment.position.add(enviroment.velocity.clone().multiplyScalar(enviroment.deltaTime));
+        enviroment.position.x = parseFloat(enviroment.position.x.toFixed(8));
+        enviroment.position.y = parseFloat(enviroment.position.y.toFixed(8));
+        enviroment.position.z = parseFloat(enviroment.position.z.toFixed(8));
+        console.log("position", enviroment.position);
 
-        console.log('newwwwwwwwwwwwwwwwwwwwww');
+    }
+    update() {
+        //updating variables
+        enviroment.updateValues();
+
+        // var this.enviroment.deltaTime = 0.01666666666666666666666666666667;
+
+
+        this.calculateAcceleration();
+        this.calculateVelocity();
+        this.calculatePosition();
+
+        rotationalDynamics.update(waterForce.calculateWaterForceZ());
+        // console.log('newwwwwwwwwwwwwwwwwwwwww');
     }
 
 

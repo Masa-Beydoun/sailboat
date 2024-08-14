@@ -1,49 +1,38 @@
 import * as THREE from 'three';
-
 import { Vector3 } from "three";
-import TotalForce from "./TotalForce";
-import WaterForce from "./WaterForces";
 
 var waterForce;
 class RotationalDynamics {
     constructor(enviroment) {
         this.enviroment = enviroment;
-        waterForce = new WaterForce(enviroment);
     }
 
 
 
-    calculateTorque() {
+    calculateTorque(force) {
 
-        const force = waterForce.calculateWaterForceZ();
         const pointOfApplication = new Vector3(0, 0, -this.enviroment.length / 2);
 
         this.enviroment.torque.z = force.z * pointOfApplication.z * this.enviroment.dfa;
         console.log("torque ", this.enviroment.torque);
     }
 
-    updateAccelerationAndVelocity() {
-        let deltaTime = 0.01666666666666666666666666666667;
 
 
-        console.log("torque here", this.enviroment.torque);
-        console.log("moment of intera here", this.enviroment.momentOfInertia);
+    calculateAcceleration() {
         // Angular acceleration = Torque / Moment of Inertia
         this.enviroment.angularAcceleration = this.enviroment.torque.clone().divide(this.enviroment.momentOfInertia);
         console.log("angular Acceleration", this.enviroment.angularAcceleration);
-
-        // Update angular velocity
-        this.enviroment.angularVelocity.add(this.enviroment.angularAcceleration.multiplyScalar(deltaTime));
-        console.log("angular velocity", this.enviroment.velocity);
-
-
-        // (0,0,this.enviroment.angularVelocity.z + (this.enviroment.angularAcceleration.z * variables.dt))
-
-        this.enviroment.theta = (this.enviroment.angularVelocity.z * deltaTime) + (0.5 * Math.pow(deltaTime, 2) * this.enviroment.angularAcceleration.z)
-        console.log("theta", this.enviroment.theta);
-
-
+        // (this.enviroment.angularVelocity.z + (this.enviroment.angularAcceleration.z * this.enviroment.deltaTime))
         // (this.enviroment.angularVelocity.z * variables.dt) + (0.5 * Math.pow(variables.dt,2) * this.enviroment.angularAcceleration.z)
+    }
+    calculteVelocity() {
+        this.enviroment.angularVelocity.add(this.enviroment.angularAcceleration.multiplyScalar(this.enviroment.deltaTime));
+        // console.log("angular velocity", this.enviroment.velocity);
+    }
+    calculateTheta() {
+        this.enviroment.theta = (this.enviroment.angularVelocity.z * this.enviroment.deltaTime) + (0.5 * Math.pow(this.enviroment.deltaTime, 2) * this.enviroment.angularAcceleration.z)
+        // console.log("theta", this.enviroment.theta);
     }
 
 
@@ -61,9 +50,11 @@ class RotationalDynamics {
         }
     }
 
-    update() {
-        this.calculateTorque();
-        this.updateAccelerationAndVelocity();
+    update(force) {
+        this.calculateTorque(force);
+        this.calculateAcceleration();
+        this.calculteVelocity();
+        this.calculateTheta();
         this.updateRotation();
     }
 }

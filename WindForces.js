@@ -3,64 +3,19 @@ import { Vector3 } from "three";
 import * as dat from "dat.gui";
 
 class WindForces {
-    constructor(enviroment) {
-
-        this.enviroment = enviroment
-
-        // this.startSimulation = false;
-
-
-        // // متغيرات قوة دفع الهواء
-        // this.surfaceArea = 8000;
-        // this.airDensity = 1.225;
-        // this.airThrustConstant = 1;
-        // this.velocity = 1000;
-        // this.position = new Vector3(0, 0, 0);
-        // this.velocity = new Vector3(0, 0, 0);
-        // this.accelration = new Vector3(0, 0, 0);
-
-        // //متغيرات قوة مقاومة الهواء
-        // this.airResistanceConstant = 1;
-        // this.airDensity = 1.225;
-        // this.surfaceArea = 15000;
-        // this.velocity = 1000;
-        // this.position = new Vector3(0, 0, 0);
-        // this.velocity = new Vector3(0, 0, 0);
-        // // this.accelration = new Vector3(0, 0, 0);
-
-        // // متغيرات قوة الثقل
-        // this.passengerMass = 300;//1000
-        // this.equipmentMass = 7000 ;//14000
-
-        // this.gravityConstant = 9.81;
-
-
-        // this.gui = new dat.GUI();
-        // // متغيرات قوة الثقل
-        // this.gui
-        //     .add(this, "passengerMass")
-        //     .min(0)
-        //     .max(10000)
-        //     .step(1)
-        //     .name("passengerMass");
-        // this.gui
-        //     .add(this, "equipmentMass")
-        //     .min(0)
-        //     .max(10000)
-        //     .step(1)
-        //     .name("equipmentMass");
-
-        // this.gui
-        //     .add(this, "startSimulation")
-
-        //     .name("start simulation ");
+    constructor(environment) {
+        this.environment = environment
     }
 
     calculateWindForceX() {
-        let relativeVelocity = this.enviroment.velocity.clone();
-        relativeVelocity.x += this.enviroment.windVelocity.x;
+        let relativeVelocity = this.environment.velocity.clone();
+        relativeVelocity.x += this.environment.windVelocity.x;
 
-        let windForce = 0.5 * this.enviroment.airResistanceConstant * this.enviroment.airDensity * this.enviroment.surfaceArea * Math.pow(relativeVelocity.x, 2);
+        // console.log("relative velocity", relativeVelocity);
+        // console.log("airResistanceConstant", this.environment.airResistanceConstant);
+        // console.log("air den ", this.environment.airDensity);
+
+        let windForce = 0.5 * this.environment.airResistanceConstant * this.environment.airDensity * this.environment.surfaceArea * Math.pow(relativeVelocity.x, 2);
         // قوة الهواء =  مقاومة الهواء × كثافة الهواء × مساحة السطح المتأثر × سرعة الهواء للتربيع 
 
         let windForceVector = new Vector3(windForce, 0, 0);
@@ -69,10 +24,10 @@ class WindForces {
     }
 
     calculateWindForceZ() {
-        let relativeVelocity = this.enviroment.velocity.clone();
-        relativeVelocity.z += this.enviroment.windVelocity.z;
+        let relativeVelocity = this.environment.velocity.clone();
+        relativeVelocity.z += this.environment.windVelocity.z;
 
-        let windForce = 0.5 * this.enviroment.airResistanceConstant * this.enviroment.airDensity * this.enviroment.surfaceArea * Math.pow(relativeVelocity.z, 2);
+        let windForce = 0.5 * this.environment.airResistanceConstant * this.environment.airDensity * this.environment.surfaceArea * Math.pow(relativeVelocity.z, 2);
 
         let windForceVector = new Vector3(0, 0, windForce);
 
@@ -80,16 +35,16 @@ class WindForces {
     }
 
     calculateAirResistance() {
-        var airDensityOutside = this.enviroment.airDensity;
-        var v = this.enviroment.velocity.lengthSq();
+        var airDensityOutside = this.environment.airDensity;
+        var v = this.environment.velocity.lengthSq();
         var airResistance =
             0.5 *
-            this.enviroment.airResistanceConstant *
+            this.environment.airResistanceConstant *
             airDensityOutside *
-            this.enviroment.surfaceArea *
+            this.environment.surfaceArea *
             v;
         var airResistanceVector;
-        if (this.enviroment.position.y > 3750) {
+        if (this.environment.position.y > 3750) {
             airResistanceVector = new Vector3(0, -airResistance, 0);
         } else {
             airResistanceVector = new Vector3(0, airResistance, 0);
@@ -101,9 +56,11 @@ class WindForces {
     totalForce() {
         var tf = new Vector3(0, 0, 0);
         tf = tf.add(this.calculateAirResistance());
+        // console.log("air rese", this.calculateAirResistance());
         tf = tf.add(this.calculateWindForceX());
+        // console.log("wind force x", this.calculateWindForceX());
         tf = tf.add(this.calculateWindForceZ());
-        // console.log("total wind", tf);
+        // console.log("wind force z", this.calculateWindForceZ());
         return tf;
     }
 
