@@ -74,15 +74,17 @@ class Environment {
         this.salty = 35;
         this.pressure = 1;
 
+        this.maxMass = this.gravityConstant * this.length * this.width * this.hight;
         this.deltaTime = 0.016666666666666666667;
 
+        this.rho0 = 999.84;
+        this.Beta = 0.000214;
 
     }
     addToGui() {
         this.gui = new dat.GUI();
         this.gui.add(this, "passengerMass").min(10).max(100000).step(100).name("passengerMass");
         this.gui.add(this, "boatMass").min(10).max(100000).step(100).name("boat mass");
-        this.gui.add(this, "waterDensity").min(0).max(1000).step(1).name("waterDensity ");
         this.gui.add(this, "hight").min(0).max(10).step(1).name("hight");
         this.gui.add(this, "length").min(0).max(10).step(1).name("length");
         this.gui.add(this, "width").min(0).max(10).step(1).name("width");
@@ -100,11 +102,10 @@ class Environment {
     }
     updateWaterDensity() {
 
-        const rho0 = 999.84;
-        const Beta = 0.000214;
+
 
         // صافي كثافة المياه تبعا للحرارة يحسب حيث كثافة الماء العظمى عند الدرجة 4
-        const rhoPure = rho0 * (1 - Beta * (this.temprature - 4));
+        const rhoPure = this.rho0 * (1 - this.Beta * (this.temprature - 4));
 
         // ثوابت حساب تاثير الملوحة حسب الحرارة
         const A = 0.824493 - 0.0040899 * this.temprature + 0.000076438 * Math.pow(this.temprature, 2) - 0.00000082467 * Math.pow(this.temprature, 3) + 0.0000000053875 * Math.pow(this.temprature, 4);
@@ -123,29 +124,17 @@ class Environment {
 
 
         // Total density calculation
-        const rho = rhoPure + salinityContribution + pressureContribution;
+        this.waterDensity = rhoPure + salinityContribution + pressureContribution;
         // console.log("rho", rho);
 
-
-
+        // حساب الكثافة
         /*
-        const rho0 = 1000; // كثافة الماء عند 4°C (كجم/م³)
-
-    // المعاملات التجريبية
-    const alpha = 0.0002; // معامل الحرارة
-    const beta = 0.00001; // معامل الحرارة
-    const gamma = 0.8; // معامل الملوحة
-
-    // الضغط المرجعي
-    const P0 = 1; // بار
-
-    // حساب الكثافة
-    const density = rho0 * 
-        (1 - (alpha * (temperature - 4)) / (1 + beta * (temperature - 4))) *
-        (1 + gamma * salinity / 1000) *
-        (1 + pressure / P0);
-
-        */
+        const density = rho0 * 
+            (1 - (alpha * (temperature - 4)) / (1 + beta * (temperature - 4))) *
+            (1 + gamma * salinity / 1000) *
+            (1 + pressure / P0);
+    
+            */
 
     }
     updateeMomentOfInertia() {
@@ -163,6 +152,11 @@ class Environment {
         this.updateTotalMass();
         this.updateWaterDensity();
         this.updateeMomentOfInertia();
+        this.updateMaxMass();
+    }
+    updateMaxMass() {
+        this.maxMass = this.gravityConstant * this.length * this.width * this.hight;
+
     }
 }
 

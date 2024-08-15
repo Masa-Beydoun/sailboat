@@ -40,6 +40,10 @@ class TotalForce {
 
     update() {
         environment.updateValues();
+        if (environment.totalMass > environment.maxMass) {
+            console.log("the boat will start sinking, the mass is over total mass");
+        }
+
         this.calculateAcceleration();
         this.calculateVelocity();
         this.calculatePosition();
