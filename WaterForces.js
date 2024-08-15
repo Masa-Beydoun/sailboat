@@ -47,7 +47,7 @@ class WaterForce {
         let relativeVelocity = this.environment.WaterVelocity.clone();
         // relativeVelocity.z += this.enviroment.velocity.z;
 
-        let waterForceZ = 0.5 * this.environment.cd * this.environment.waterDensity * this.environment.surfaceAreaSpace * Math.pow(relativeVelocity.z, 2);
+        let waterForceZ = 0.5 * this.environment.cd * this.environment.waterDensity * this.environment.keel * Math.pow(relativeVelocity.z, 2);
         if (this.environment.WaterVelocity.z < 0) waterForceZ *= -1;
 
         waterForceZ = parseFloat(waterForceZ.toFixed(8));
@@ -59,14 +59,13 @@ class WaterForce {
 
     calculateWaterForceX() {
 
-        let space = this.environment.width * this.environment.length;
 
         let relativeVelocity = this.environment.WaterVelocity.clone();
         // relativeVelocity.x += this.enviroment.velocity.x;
 
         relativeVelocity.x = parseFloat(relativeVelocity.x.toFixed(8));
 
-        let waterForceX = 0.5 * this.environment.cd * this.environment.waterDensity * space * Math.pow(relativeVelocity.x, 2);
+        let waterForceX = 0.5 * this.environment.cd * this.environment.waterDensity * this.environment.keel * Math.pow(relativeVelocity.x, 2);
         waterForceX = parseFloat(waterForceX.toFixed(8));
 
         if (this.environment.WaterVelocity.x < 0) waterForceX *= -1;

@@ -8,8 +8,9 @@ class WindForces {
     }
 
     calculateWindForceX() {
-        let relativeVelocity = this.environment.velocity.clone();
-        relativeVelocity.x += this.environment.windVelocity.x;
+        // let relativeVelocity = this.environment.velocity.clone();
+        // relativeVelocity.x += this.environment.windVelocity.x;
+        let relativeVelocity = this.environment.windVelocity;
 
         // console.log("relative velocity", relativeVelocity);
         // console.log("airResistanceConstant", this.environment.airResistanceConstant);
@@ -17,6 +18,7 @@ class WindForces {
 
         let windForce = 0.5 * this.environment.airResistanceConstant * this.environment.airDensity * this.environment.surfaceArea * Math.pow(relativeVelocity.x, 2);
         // قوة الهواء =  مقاومة الهواء × كثافة الهواء × مساحة السطح المتأثر × سرعة الهواء للتربيع 
+        if (this.environment.windVelocity.x < 0) windForce *= -1;
 
         let windForceVector = new Vector3(windForce, 0, 0);
 
@@ -24,11 +26,13 @@ class WindForces {
     }
 
     calculateWindForceZ() {
-        let relativeVelocity = this.environment.velocity.clone();
-        relativeVelocity.z += this.environment.windVelocity.z;
+        // let relativeVelocity = this.environment.velocity.clone();
+        // relativeVelocity.z += this.environment.windVelocity.z;
+        let relativeVelocity = this.environment.windVelocity;
 
         let windForce = 0.5 * this.environment.airResistanceConstant * this.environment.airDensity * this.environment.surfaceArea * Math.pow(relativeVelocity.z, 2);
 
+        if (this.environment.windVelocity.z < 0) windForce *= -1;
         let windForceVector = new Vector3(0, 0, windForce);
 
         return windForceVector;

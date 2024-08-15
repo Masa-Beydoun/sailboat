@@ -376,11 +376,6 @@ function animateBoat() {
 
 const update = (delta) => {
 
-    // if (windForce.startSimulation == true) {
-    //     orbit.update(delta);
-
-    //     windForce.update();
-    // }
     if (totalForce.getStartSimulation() == true) {
 
         orbit.update(delta);
@@ -388,47 +383,31 @@ const update = (delta) => {
         totalForce.update(delta);
     }
 
-
     //   تحديث موقع المنطاد بناءا على الفيزياء 
     var newPosition = new Vector3(
         totalForce.getPosition().x,
         totalForce.getPosition().y,
         totalForce.getPosition().z,
     );
+    var boatRotation = totalForce.getRotation();
 
     model.position.copy(newPosition);
+    model.rotation.x = boatRotation.x;
+    model.rotation.y = boatRotation.y;
+    model.rotation.z = boatRotation.z;
 
-
-
-
-    // var v = new Vector3();
-    // newPosition = new Vector3(
-    //     0, 0, 0
-
-    // );
-    // v.copy(totalForce.getPosition());
-    // newPosition = new Vector3(
-    //     v.x,
-    //     v.y,
-    //     v.z
-
-    // );
 
 
     // // التحقق من عدم تجاوز الحدود الداخلية للسكاي بوكس
     // const halfSkyboxSize = 2450; // نصف أبعاد السكاي بوكس
     // newPosition.clampScalar(-halfSkyboxSize, halfSkyboxSize);
 
-    model.position.copy(newPosition);
-
     // تحديث موقع الكاميرا بناءً على الموقع الجديد للمنطاد
     //  camera.position.x = 2 * model.position.x +  cameraOffset.x ;
     //  camera.position.y = model.position.y + cameraOffset.y;
     //  camera.position.z = 2 * model.position.z + cameraOffset.z;
 
-
     // camera.lookAt(model.position);
-
     // رسم السيناريو
 };
 

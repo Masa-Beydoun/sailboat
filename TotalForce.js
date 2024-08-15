@@ -3,12 +3,12 @@ import Enviroment from "./Environment";
 import { Vector3 } from "three";
 import WindForces from "./WindForces";
 import RotationalDynamics from "./RotationalDynamics ";
-const enviroment = new Enviroment();
-enviroment.addToGui();
+const environment = new Enviroment();
+environment.addToGui();
 
-const waterForce = new WaterForce(enviroment);
-const windForces = new WindForces(enviroment);
-const rotationalDynamics = new RotationalDynamics(enviroment);
+const waterForce = new WaterForce(environment);
+const windForces = new WindForces(environment);
+const rotationalDynamics = new RotationalDynamics(environment);
 
 
 class TotalForce {
@@ -24,36 +24,39 @@ class TotalForce {
 
     calculateAcceleration() {
         const tf = this.calculateTotalForces();
-        enviroment.acceleration.copy(tf).divideScalar(enviroment.totalMass);
+        environment.acceleration.copy(tf).divideScalar(environment.totalMass);
     }
 
     calculateVelocity() {
-        enviroment.velocity.add(enviroment.acceleration.clone().multiplyScalar(enviroment.deltaTime));
-        enviroment.velocity.multiplyScalar(0.9); // Apply damping
+        environment.velocity.add(environment.acceleration.clone().multiplyScalar(environment.deltaTime));
+        environment.velocity.multiplyScalar(0.9); // Apply damping
     }
 
     calculatePosition() {
-        enviroment.position.add(enviroment.velocity.clone().multiplyScalar(enviroment.deltaTime));
+        environment.position.add(environment.velocity.clone().multiplyScalar(environment.deltaTime));
+        environment.position.y = Math.min(environment.hight / 2, environment.position.y);
+        console.log("position", environment.position);
     }
 
     update() {
-        enviroment.updateValues();
+        environment.updateValues();
         this.calculateAcceleration();
         this.calculateVelocity();
         this.calculatePosition();
-        rotationalDynamics.update(waterForce.calculateWaterForceZ(), windForces.calculateWindForceX());
+        let water = waterForce.calculateWaterForceZ().add(waterForce.calculateWaterForceX());
+        rotationalDynamics.update(water, windForces.calculateWindForceX());
     }
 
 
     getPosition() {
-        return enviroment.position;
+        return environment.position;
     }
     getRotation() {
-        return rotationalDynamics.rotation;
+        return environment.boatRotation;
     }
 
     getStartSimulation() {
-        return enviroment.startSimulation;
+        return environment.startSimulation;
     }
 }
 

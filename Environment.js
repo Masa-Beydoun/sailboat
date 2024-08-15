@@ -20,7 +20,7 @@ class Environment {
         this.gravityConstant = 9.81;  //   m/s^2
         this.waterDensity = 1000;    //
         this.airDensity = 1.225;     //
-        this.surfaceArea = 37.04; //8000
+        this.surfaceArea = 37.04; //8000                // 
 
         // سرعة الرياح 
         this.windVelocity = new Vector3(0, 0, 0);                  //
@@ -29,7 +29,7 @@ class Environment {
         //position,velocity,accelration for boat
         this.position = new Vector3(0, 0, 0);                      //
         this.velocity = new Vector3(0, 0, 0);                      //
-        this.accelration = new Vector3(0, 0, 0);                   //
+        this.acceleration = new Vector3(0, 0, 0);                   //
         this.besideVolume = 0;
 
 
@@ -41,18 +41,19 @@ class Environment {
 
 
         this.alpha = 0;
+        this.beta = 0;
         this.theta = 0;
-        this.boatAttackAngle = 0;
         this.torque = new Vector3(0, 0, 0);
 
 
         //boat variables
         this.length = 11.5;                                         //
         this.width = 3.99;                                          // 
-        this.hight = 1.95;                                          // 
+        this.hight = 1.95;
+        this.keel = 2.5;
         this.surfaceAreaSpace = this.length * this.width;           //
 
-        this.cd = 0.1;                                              //
+        this.cd = 0.7;                                              //
 
         // متغيرات قوة برنولي
         this.p0 = 13;
@@ -74,6 +75,7 @@ class Environment {
         this.pressure = 1;
 
         this.deltaTime = 0.016666666666666666667;
+
 
     }
     addToGui() {
@@ -123,6 +125,27 @@ class Environment {
         // Total density calculation
         const rho = rhoPure + salinityContribution + pressureContribution;
         // console.log("rho", rho);
+
+
+
+        /*
+        const rho0 = 1000; // كثافة الماء عند 4°C (كجم/م³)
+
+    // المعاملات التجريبية
+    const alpha = 0.0002; // معامل الحرارة
+    const beta = 0.00001; // معامل الحرارة
+    const gamma = 0.8; // معامل الملوحة
+
+    // الضغط المرجعي
+    const P0 = 1; // بار
+
+    // حساب الكثافة
+    const density = rho0 * 
+        (1 - (alpha * (temperature - 4)) / (1 + beta * (temperature - 4))) *
+        (1 + gamma * salinity / 1000) *
+        (1 + pressure / P0);
+
+        */
 
     }
     updateeMomentOfInertia() {
