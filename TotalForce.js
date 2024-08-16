@@ -1,16 +1,14 @@
 import WaterForce from "./WaterForces";
-import Enviroment from "./Enviroment";
-
+import Enviroment from "./Environment";
 import { Vector3 } from "three";
-import * as dat from "dat.gui";
 import WindForces from "./WindForces";
-import RotationalDynamics from "./WindForces";
-const enviroment = new Enviroment();
-enviroment.addToGui();
+import RotationalDynamics from "./RotationalDynamics ";
+const environment = new Enviroment();
+environment.addToGui();
 
-const waterForce = new WaterForce(enviroment);
-const windForces = new WindForces(enviroment);
-const rotationalDynamics = new RotationalDynamics(enviroment);
+const waterForce = new WaterForce(environment);
+const windForces = new WindForces(environment);
+const rotationalDynamics = new RotationalDynamics(environment);
 
 
 class TotalForce {
@@ -18,62 +16,73 @@ class TotalForce {
     constructor() { }
 
     calculateTotalForces() {
-        var allTF = new Vector3(0, 0, 0);
-        allTF = allTF.add(waterForce.totalForce());
-        allTF = allTF.add(windForces.totalForce());
 
+
+        let allTF = new Vector3();
+        allTF.add(waterForce.totalForce());
+        allTF.add(windForces.totalForce());
         return allTF;
     }
 
+    calculateAcceleration() {
+        const tf = this.calculateTotalForces();
+        environment.acceleration.copy(tf).divideScalar(environment.totalMass);
+    }
+
+    calculateVelocity() {
+        environment.velocity.add(environment.acceleration.clone().multiplyScalar(environment.deltaTime));
+        environment.velocity.multiplyScalar(0.9); // Apply damping
+    }
+
+    calculatePosition() {
+        environment.position.add(environment.velocity.clone().multiplyScalar(environment.deltaTime));
+        environment.position.y = Math.min(environment.hight / 2, environment.position.y);
+    }
+
     update() {
-        //updating variables
-        enviroment.updateTotalMass();
-        enviroment.calculateMomentOfInertia();
-        enviroment.updateWaterDensity();
-
-        //calculating forces
-        var deltaTime = 0.01666666666666666666666666666667;
-        var tf = this.calculateTotalForces();
-
-        console.log("position", enviroment.position);
-        console.log("total force ", tf);
-        console.log("weightVector", windForces.calculateWeightOfBoat());
-        console.log("airResistanceVector", windForces.calculateAirResistance());
-        console.log("BuoyantForce", waterForce.calculateBuoyantForce());
-        console.log("waterResistanceVector", waterForce.calculateWaterResistance());
-        console.log("WaterForceXZ", waterForce.calculateWaterForceXZ());
+        environment.updateValues();
+        this.checkFlag();
 
 
-        var totalMass = enviroment.equipmentMass + enviroment.passengerMass;
-        enviroment.accelration.copy(tf).divideScalar(totalMass);
+        this.calculateAcceleration();
+        this.calculateVelocity();
+        this.calculatePosition();
+        let water = waterForce.calculateWaterForceZ().add(waterForce.calculateWaterForceX()).add(waterForce.calculateWaterForceY());
+        rotationalDynamics.update(water, windForces.calculateWindForceX());
+        // console.log("newwwwwwwwww")
+    }
 
-        console.log("accelaration", enviroment.accelration);
-
-        // Update velocity
-        enviroment.velocity.add(enviroment.accelration.clone().multiplyScalar(deltaTime));
-
-        console.log("velocity", enviroment.velocity);
-
-        // Update position
-        enviroment.position.add(enviroment.velocity.clone().multiplyScalar(deltaTime));
-
-        console.log('newwwwwwwwwwwwwwwwwwwwww');
-        // Apply damping to simulate water resistance
-        enviroment.velocity.multiplyScalar(0.9);
+    checkFlag() {
+        if (environment.flag == true) {
+            if (environment.upDown == 0) {
+                environment.WaterVelocity.y++;
+                if (environment.WaterVelocity.y > 30) {
+                    environment.upDown = 1;
+                }
+            }
+            else {
+                environment.WaterVelocity.y--;
+                if (environment.WaterVelocity.y == 0) {
+                    environment.flag = false;
+                    environment.upDown = 0;
+                }
+            }
+        }
+        console.log("flag", environment.flag);
+        console.log("water velocity y", environment.WaterVelocity.y);
 
 
     }
-
 
     getPosition() {
-        return enviroment.position;
+        return environment.position;
     }
     getRotation() {
-        return rotationalDynamics.rotation;
+        return environment.boatRotation;
     }
 
     getStartSimulation() {
-        return enviroment.startSimulation;
+        return environment.startSimulation;
     }
 }
 

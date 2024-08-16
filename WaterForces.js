@@ -1,86 +1,113 @@
 import { Vector3 } from "three";
 
-import Enviroment from "./Enviroment";
+import Enviroment from "./Environment";
 import { lerp } from "three/src/math/MathUtils.js";
 
 class WaterForce {
 
     constructor(enviroment) {
-        this.enviroment = enviroment;
+        this.environment = enviroment;
     }
-
 
 
 
     calculateBuoyantForce() {
         //قوة الطفو = كثافة المي * ثابت الجاذبية الأرضية * حجم السائل المزاح
-        let yPosition = this.enviroment.position.y; // Assume y=0 is the water surface level
+        let yPosition = this.environment.position.y;
 
-        if (yPosition > this.enviroment.hight / 2) {
-            this.enviroment.boatDepth = 0;
+        if (yPosition > this.environment.hight / 2) {
+            this.environment.boatDepth = 0;
         }
         else if (yPosition > 0) {
-            this.enviroment.boatDepth = parseFloat((this.enviroment.hight / 2 - yPosition).toFixed(8));
+            this.environment.boatDepth = parseFloat((this.environment.hight / 2 - yPosition).toFixed(8));
         }
         else {
-            this.enviroment.boatDepth = parseFloat((Math.min(this.enviroment.hight, this.enviroment.hight / 2 + Math.abs(yPosition))).toFixed(8));
+            this.environment.boatDepth = parseFloat((Math.min(this.environment.hight, this.environment.hight / 2 + Math.abs(yPosition))).toFixed(8));
         }
 
-        let submergedVolume = this.enviroment.boatDepth * this.enviroment.length * this.enviroment.width;
+        let submergedVolume = this.environment.boatDepth * this.environment.length * this.environment.width;
         // Update the displaced volume
-        this.enviroment.besideVolume = submergedVolume;
+        this.environment.besideVolume = submergedVolume;
 
-        let buoyantForce = this.enviroment.waterDensity * this.enviroment.gravityConstant * submergedVolume;
+        let buoyantForce = this.environment.waterDensity * this.environment.gravityConstant * submergedVolume;
 
-        let maxBuoyantForce = this.enviroment.waterDensity * this.enviroment.gravityConstant * this.enviroment.length * this.enviroment.width * this.enviroment.hight;
+        let maxBuoyantForce = this.environment.waterDensity * this.environment.gravityConstant * this.environment.length * this.environment.width * this.environment.hight;
         buoyantForce = Math.min(buoyantForce, maxBuoyantForce);
         return new Vector3(0, parseFloat(buoyantForce.toFixed(8)), 0);
     }
 
     calculateWeightOfBoat() {
         // كتلة الحمولة = كتلة الركاب + كتلة المعدات
-        var weightOfBoat = this.enviroment.totalMass * this.enviroment.gravityConstant;
+        var weightOfBoat = this.environment.totalMass * this.environment.gravityConstant;
         return new Vector3(0, parseFloat(-weightOfBoat.toFixed(8)), 0);
     }
 
+    calculateWaterForceZ() {
 
-    calculateWaterForceXZ() {
+        let relativeVelocity = this.environment.WaterVelocity.clone();
+        // relativeVelocity.z += this.enviroment.velocity.z;
 
-        let space = this.enviroment.width * this.enviroment.length;
+        let waterForceZ = 0.5 * this.environment.cd * this.environment.waterDensity * this.environment.keel * Math.pow(relativeVelocity.z, 2);
+        if (this.environment.WaterVelocity.z < 0) waterForceZ *= -1;
+
+        waterForceZ = parseFloat(waterForceZ.toFixed(8));
+        let waterForceVector = new Vector3(0, 0, waterForceZ);
+
+        return waterForceVector;
+
+    }
+    calculateWaterForceY() {
 
 
-        let waterForceX = 0.5 * this.enviroment.cd * this.enviroment.waterDensity * space * Math.pow(this.enviroment.WaterVelocity.x, 2);
-        // قوة الماء =  معامل السحب الديناميكي × كثافة الماء × مساحة السطح المتأثر × سرعة الماء للتربيع 
+        let relativeVelocity = this.environment.WaterVelocity.clone();
+        // relativeVelocity.z += this.enviroment.velocity.z;
 
-        if (this.enviroment.WaterVelocity.x < 0) waterForceX *= -1;
 
-        let relativeVelocityZ = this.enviroment.velocity.clone();
-        relativeVelocityZ.z += this.enviroment.waterSpeedZ;
+        let waterForceY = 0.5 * this.environment.cd * this.environment.waterDensity * this.environment.keel * Math.pow(relativeVelocity.y, 2);
 
-        let waterForceZ = 0.5 * this.enviroment.cd * this.enviroment.waterDensity * this.enviroment.surfaceAreaSpace * Math.pow(this.enviroment.WaterVelocity.z, 2);
-        if (this.enviroment.WaterVelocity.z < 0) waterForceZ *= -1;
-        parseFloat(waterForceX.toFixed(8));
-        parseFloat(waterForceZ.toFixed(8));
-        let waterForceVector = new Vector3(waterForceX, 0, waterForceZ);
 
+        if (this.environment.WaterVelocity.y < 0) waterForceY = 0;
+
+        waterForceY = parseFloat(waterForceY.toFixed(8));
+        let waterForceVector = new Vector3(0, waterForceY, 0);
+
+        return waterForceVector;
+
+    }
+
+    calculateWaterForceX() {
+
+
+        let relativeVelocity = this.environment.WaterVelocity.clone();
+        // relativeVelocity.x += this.enviroment.velocity.x;
+
+        relativeVelocity.x = parseFloat(relativeVelocity.x.toFixed(8));
+
+        let waterForceX = 0.5 * this.environment.cd * this.environment.waterDensity * this.environment.keel * Math.pow(relativeVelocity.x, 2);
+        waterForceX = parseFloat(waterForceX.toFixed(8));
+
+        if (this.environment.WaterVelocity.x < 0) waterForceX *= -1;
+
+        let waterForceVector = new Vector3(waterForceX, 0, 0);
+        // console.log("water force x", waterForceVector);
         return waterForceVector;
     }
 
 
     calculateWaterResistance() {
         // سرعة القارب بالنسبة لسرعة المياه
-        let relativeVelocity = this.enviroment.velocity.clone().sub(this.enviroment.WaterVelocity);
+        let relativeVelocity = this.environment.velocity.clone().sub(this.environment.WaterVelocity);
 
         // المساحات العرضية للقارب في اتجاهات المحاور المختلفة
-        let areaY = this.enviroment.length * this.enviroment.width;
-        if (this.enviroment.boatDepth == 0) areaY = 0;
-        let areaX = this.enviroment.boatDepth * this.enviroment.length;
-        let areaZ = this.enviroment.width * this.enviroment.boatDepth;
+        let areaY = this.environment.length * this.environment.width;
+        if (this.environment.boatDepth == 0) areaY = 0;
+        let areaX = this.environment.boatDepth * this.environment.length;
+        let areaZ = this.environment.width * this.environment.boatDepth;
 
         // حساب قوة مقاومة المياه في كل اتجاه
-        let waterResistanceMagnitudeX = 0.5 * this.enviroment.cd * this.enviroment.waterDensity * areaX * Math.pow(relativeVelocity.x, 2);
-        let waterResistanceMagnitudeY = 0.5 * this.enviroment.cd * this.enviroment.waterDensity * areaY * Math.pow(relativeVelocity.y, 2);
-        let waterResistanceMagnitudeZ = 0.5 * this.enviroment.cd * this.enviroment.waterDensity * areaZ * Math.pow(relativeVelocity.z, 2);
+        let waterResistanceMagnitudeX = 0.5 * this.environment.cd * this.environment.waterDensity * areaX * Math.pow(relativeVelocity.x, 2);
+        let waterResistanceMagnitudeY = 0.5 * this.environment.cd * this.environment.waterDensity * areaY * Math.pow(relativeVelocity.y, 2);
+        let waterResistanceMagnitudeZ = 0.5 * this.environment.cd * this.environment.waterDensity * areaZ * Math.pow(relativeVelocity.z, 2);
 
 
         // اتجاه قوة مقاومة المياه يكون معاكسا لاتجاه سرعة القارب بالنسبة للماء
@@ -106,13 +133,11 @@ class WaterForce {
 
     totalForce() {
         let tf = new Vector3(0, 0, 0);
-        let firstY = this.calculateWeightOfBoat();
-        firstY.add(this.calculateBuoyantForce());
-        tf.add(firstY);
-        let secondY = this.calculateWaterResistance();
-        tf = tf.add(secondY);
-        tf = tf.add(this.calculateWaterForceXZ());
-
+        tf.add(this.calculateBuoyantForce());
+        tf.add(this.calculateWeightOfBoat());
+        tf.add(this.calculateWaterResistance());
+        tf.add(this.calculateWaterForceZ());
+        tf.add(this.calculateWaterForceX());
         return tf;
     }
 
@@ -123,15 +148,17 @@ class WaterForce {
         console.log("weightVector", this.calculateWeightOfBoat());
         console.log("BuoyantForce", this.calculateBuoyantForce());
         console.log("waterResistanceVector", this.calculateWaterResistance());
+        console.log("WaterForceXZ", this.calculateWaterForceX())
+        console.log("WaterForceXZ", this.calculateWaterForceZ())
 
 
-        this.enviroment.accelration.copy(tf).divideScalar(this.enviroment.totalMass);
+        // this.enviroment.accelration.copy(tf).divideScalar(this.enviroment.totalMass);
         // Update velocity
-        this.enviroment.velocity.add(this.enviroment.accelration.clone().multiplyScalar(deltaTime));
+        // this.enviroment.velocity.add(this.enviroment.accelration.clone().multiplyScalar(deltaTime));
         // Update position
-        this.enviroment.position.add(this.enviroment.velocity.clone().multiplyScalar(deltaTime));
+        // this.enviroment.position.add(this.enviroment.velocity.clone().multiplyScalar(deltaTime));
         // Apply damping to simulate water resistance
-        this.enviroment.velocity.multiplyScalar(0.9);
+        // this.enviroment.velocity.multiplyScalar(0.9);
     }
 
 
