@@ -13,15 +13,30 @@ import pyday from './pyday.jpg';
 import nyday from './nyday.jpg';
 import pzday from './pzday.jpg';
 import nzday from './nzday.jpg';
+
 import t from './t7.jpg';
 
-import front from './front.jpg';
-import top from './top.jpg';
-import back from './back.jpg';
-import left from './left.jpg';
-import right from './right.jpg';
+import front from './newfront.jpg';
+import top from './newtop.jpg';
+import back from './newback.jpg';
+import left from './newleft.jpg';
+import right from './newright.jpg';
 import bottom from './bottom.jpg';
 import water6 from './sea.jpg';
+
+import front2 from './newfront2.jpg';
+import top2 from './newtop2.jpg';
+import back2 from './newback2.jpg';
+import left2 from './newleft2.jpg';
+import right2 from './newright2.jpg';
+import bottom2 from './newbottom2.jpg';
+
+import front3 from './newfront3.jpg';
+import top3 from './newtop3.jpg';
+import back3 from './newback3.jpg';
+import left3 from './newleft3.jpg';
+import right3 from './newright3.jpg';
+import bottom3 from './newbottom3.jpg';
 
 import water from './water.jpg';
 import { depth, mod, reflect, textureLoad } from 'three/examples/jsm/nodes/Nodes.js';
@@ -145,6 +160,39 @@ loader.load(
     }
 );
 
+loader.load(
+    anotherboatUrl.href,
+    function (gltf) {
+        model4 = gltf.scene;
+        const desiredHeight = 2;
+        const desiredDepth = 2;
+        const desiredWidth = 4;
+        model4.scale.set(
+            0.1, 0.1, 0.33
+        );
+        model4.position.set(-800,0,-800);
+        model4.rotateY(THREE.MathUtils.degToRad(160));
+        scene.add(model4);
+       
+        const mixer = new THREE.AnimationMixer(model4);
+        gltf.animations.forEach((clip) => {
+            mixer.clipAction(clip).play();
+        });
+         
+        //model.geometry.parameters.width;
+        //console.log("MODEL "+model);
+        animate(model4);
+        animateModel(model4);
+    },
+    undefined
+    ,
+
+    function (error) {
+        console.error(error);
+    }
+);
+
+
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 orbit.update();
@@ -189,12 +237,7 @@ const cubeTextureLoader = new THREE.CubeTextureLoader();
 scene.background = cubeTextureLoader.load(
     [
 
-        // left,
-        // right,
-        // top,
-        // bottom,
-        // back,
-        // front
+      
 
         // left,
         // right,
@@ -204,19 +247,34 @@ scene.background = cubeTextureLoader.load(
         // front
         
        
-        pxday,
-        nxday,
-        pyday,
-        nyday,
-       // t,
-        nzday,
-        pzday,
+    //     pxday,
+    //     nxday,
+    //     pyday,
+    //     nyday,
+    //    // t,
+    //     nzday,
+    //     pzday,
+
+    // right2,
+    // left2,
+    // top2,
+    // bottom2,
+    // front2,
+    // back2, 
+    
+    right3,
+    left3,
+    top3,
+    bottom3,
+    front3,
+    back3, 
+   
        
     ]
 );
 
-
-
+//scene.background.setSize(1);
+scene.background.scale=14;
 
 gui.add(options, 'speed', 0, 0.1);
 gui.add(options, 'wireframe').onChange(function (e) {
