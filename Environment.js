@@ -44,6 +44,7 @@ class Environment {
         this.beta = 0;
         this.theta = 0;
         this.torque = new Vector3(0, 0, 0);
+        this.counter = 0;
 
 
         //boat variables
@@ -67,10 +68,11 @@ class Environment {
         //متغيرات قوة مقاومة الهواء
         this.airResistanceConstant = 1;
 
+        this.flag = false;
+        this.upDown = 0;
         this.dfa = 0;
         //متغيرات كثافة الماء
         this.temprature = 35;
-        this.rho = 1000;
         this.salty = 35;
         this.pressure = 1;
 
@@ -89,15 +91,16 @@ class Environment {
         this.gui.add(this, "length").min(0).max(10).step(1).name("length");
         this.gui.add(this, "width").min(0).max(10).step(1).name("width");
         this.gui.add(this, "gravityConstant").min(0).max(20).step(0.01).name("gravityConstant");
-        this.gui.add(this.WaterVelocity, 'x').min(-100).max(100).step(10).name("water velocity x ");
-        this.gui.add(this.WaterVelocity, 'y').min(-100).max(100).step(10).name("water velocity y ");
-        this.gui.add(this.WaterVelocity, 'z').min(-100).max(100).step(10).name("water velocity z ");
+        this.gui.add(this.WaterVelocity, 'x').min(-10).max(10).step(1).name("water velocity x ");
+        this.gui.add(this.WaterVelocity, 'y').min(-10).max(40).step(1).name("water velocity y ");
+        this.gui.add(this.WaterVelocity, 'z').min(-10).max(10).step(1).name("water velocity z ");
         this.gui.add(this, "temprature").min(4).max(100).step(5).name("Water Temprature");
         this.gui.add(this, "salty").min(0).max(100).step(5).name("salty");
         this.gui.add(this, "pressure").min(0).max(10).step(1).name("Pressure");
-        this.gui.add(this.windVelocity, 'x').min(-100).max(100).step(10).name("wind velocity x");
-        this.gui.add(this.windVelocity, 'z').min(-100).max(100).step(10).name("wind velocity z");
+        this.gui.add(this.windVelocity, 'x').min(-30).max(40).step(1).name("wind velocity x");
+        this.gui.add(this.windVelocity, 'z').min(-30).max(40).step(1).name("wind velocity z");
         this.gui.add(this, "dfa").min(-1).max(1).step(1).name("dfa");
+        this.gui.add(this, "flag").name("flag");
         this.gui.add(this, "startSimulation").name("start simulation ");
     }
     updateWaterDensity() {
@@ -155,7 +158,10 @@ class Environment {
         this.updateMaxMass();
     }
     updateMaxMass() {
-        this.maxMass = this.gravityConstant * this.length * this.width * this.hight;
+        this.maxMass = this.waterDensity * this.length * this.width * this.hight;
+        if (this.totalMass > this.maxMass) {
+            console.log("the boat will start sinking, the mass is over total mass");
+        }
 
     }
 }

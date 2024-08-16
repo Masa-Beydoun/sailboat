@@ -16,6 +16,8 @@ class TotalForce {
     constructor() { }
 
     calculateTotalForces() {
+
+
         let allTF = new Vector3();
         allTF.add(waterForce.totalForce());
         allTF.add(windForces.totalForce());
@@ -35,22 +37,42 @@ class TotalForce {
     calculatePosition() {
         environment.position.add(environment.velocity.clone().multiplyScalar(environment.deltaTime));
         environment.position.y = Math.min(environment.hight / 2, environment.position.y);
-        console.log("position", environment.position);
     }
 
     update() {
         environment.updateValues();
-        if (environment.totalMass > environment.maxMass) {
-            console.log("the boat will start sinking, the mass is over total mass");
-        }
+        this.checkFlag();
+
 
         this.calculateAcceleration();
         this.calculateVelocity();
         this.calculatePosition();
-        let water = waterForce.calculateWaterForceZ().add(waterForce.calculateWaterForceX());
+        let water = waterForce.calculateWaterForceZ().add(waterForce.calculateWaterForceX()).add(waterForce.calculateWaterForceY());
         rotationalDynamics.update(water, windForces.calculateWindForceX());
+        // console.log("newwwwwwwwww")
     }
 
+    checkFlag() {
+        if (environment.flag == true) {
+            if (environment.upDown == 0) {
+                environment.WaterVelocity.y++;
+                if (environment.WaterVelocity.y > 30) {
+                    environment.upDown = 1;
+                }
+            }
+            else {
+                environment.WaterVelocity.y--;
+                if (environment.WaterVelocity.y == 0) {
+                    environment.flag = false;
+                    environment.upDown = 0;
+                }
+            }
+        }
+        console.log("flag", environment.flag);
+        console.log("water velocity y", environment.WaterVelocity.y);
+
+
+    }
 
     getPosition() {
         return environment.position;

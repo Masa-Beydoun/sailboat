@@ -56,6 +56,24 @@ class WaterForce {
         return waterForceVector;
 
     }
+    calculateWaterForceY() {
+
+
+        let relativeVelocity = this.environment.WaterVelocity.clone();
+        // relativeVelocity.z += this.enviroment.velocity.z;
+
+
+        let waterForceY = 0.5 * this.environment.cd * this.environment.waterDensity * this.environment.keel * Math.pow(relativeVelocity.y, 2);
+
+
+        if (this.environment.WaterVelocity.y < 0) waterForceY = 0;
+
+        waterForceY = parseFloat(waterForceY.toFixed(8));
+        let waterForceVector = new Vector3(0, waterForceY, 0);
+
+        return waterForceVector;
+
+    }
 
     calculateWaterForceX() {
 
