@@ -113,37 +113,37 @@ loader.load(
     }
 );
 
-// loader.load(
-//     anotherboatUrl.href,
-//     function (gltf) {
-//         model3 = gltf.scene;
-//         const desiredHeight = 2;
-//         const desiredDepth = 2;
-//         const desiredWidth = 4;
-//         model3.scale.set(
-//             0.1, 0.1, 0.33
-//         );
-//         model3.position.set(-500,0,800);
-//         model3.rotateY(THREE.MathUtils.degToRad(112));
-//         scene.add(model3);
+loader.load(
+    anotherboatUrl.href,
+    function (gltf) {
+        model3 = gltf.scene;
+        const desiredHeight = 2;
+        const desiredDepth = 2;
+        const desiredWidth = 4;
+        model3.scale.set(
+            0.1, 0.1, 0.33
+        );
+        model3.position.set(-500,0,800);
+        model3.rotateY(THREE.MathUtils.degToRad(112));
+        scene.add(model3);
        
-//         const mixer = new THREE.AnimationMixer(model3);
-//         gltf.animations.forEach((clip) => {
-//             mixer.clipAction(clip).play();
-//         });
+        const mixer = new THREE.AnimationMixer(model3);
+        gltf.animations.forEach((clip) => {
+            mixer.clipAction(clip).play();
+        });
          
-//         //model.geometry.parameters.width;
-//         //console.log("MODEL "+model);
-//         animate(model3);
-//         animateModel(model3);
-//     },
-//     undefined
-//     ,
+        //model.geometry.parameters.width;
+        //console.log("MODEL "+model);
+        animate(model3);
+        animateModel(model3);
+    },
+    undefined
+    ,
 
-//     function (error) {
-//         console.error(error);
-//     }
-// );
+    function (error) {
+        console.error(error);
+    }
+);
 
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
