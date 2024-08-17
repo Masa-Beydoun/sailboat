@@ -14,14 +14,29 @@ import nyday from './nyday.jpg';
 import pzday from './pzday.jpg';
 import nzday from './nzday.jpg';
 
+import t from './t7.jpg';
 
-import front from './front.jpg';
-import top from './top.jpg';
-import back from './back.jpg';
-import left from './left.jpg';
-import right from './right.jpg';
+import front from './newfront.jpg';
+import top from './newtop.jpg';
+import back from './newback.jpg';
+import left from './newleft.jpg';
+import right from './newright.jpg';
 import bottom from './bottom.jpg';
 import water6 from './sea.jpg';
+
+import front2 from './newfront2.jpg';
+import top2 from './newtop2.jpg';
+import back2 from './newback2.jpg';
+import left2 from './newleft2.jpg';
+import right2 from './newright2.jpg';
+import bottom2 from './newbottom2.jpg';
+
+import front3 from './newfront3.jpg';
+import top3 from './newtop3.jpg';
+import back3 from './newback3.jpg';
+import left3 from './newleft3.jpg';
+import right3 from './newright3.jpg';
+import bottom3 from './newbottom3.jpg';
 
 import water from './water.jpg';
 import { depth, mod, reflect, textureLoad } from 'three/examples/jsm/nodes/Nodes.js';
@@ -33,6 +48,9 @@ import TotalForce from "./TotalForce"
 
 
 const boatUrl = new URL('./untitled.glb', import.meta.url);
+const boatUrl2 = new URL('./untitled.glb', import.meta.url);
+const anotherboatUrl = new URL('./untitled.glb', import.meta.url);
+const boatUrl3 = new URL('./oldboat.gltf', import.meta.url);
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 const renderer = new THREE.WebGLRenderer();
@@ -42,7 +60,7 @@ const orbit = new OrbitControls(camera, renderer.domElement);
 const totalForce = new TotalForce();
 
 var cameraOffset = new Vector3(0, 10, -60);
-var model;
+var model,model2,model3,model4;
 
 
 const loader = new GLTFLoader();
@@ -79,6 +97,101 @@ loader.load(
         console.error(error);
     }
 );
+loader.load(
+    boatUrl2.href,
+    function (gltf) {
+        model2 = gltf.scene;
+        const desiredHeight = 2;
+        const desiredDepth = 2;
+        const desiredWidth = 4;
+        model2.scale.set(
+            0.1, 0.1, 0.2
+        );
+        model2.position.set(800,0,-600);
+        scene.add(model2);
+       
+        const mixer = new THREE.AnimationMixer(model2);
+        gltf.animations.forEach((clip) => {
+            mixer.clipAction(clip).play();
+        });
+         
+        //model.geometry.parameters.width;
+        //console.log("MODEL "+model);
+        animate(model2);
+        animateModel(model2);
+    },
+    undefined
+    ,
+
+    function (error) {
+        console.error(error);
+    }
+);
+
+loader.load(
+    anotherboatUrl.href,
+    function (gltf) {
+        model3 = gltf.scene;
+        const desiredHeight = 2;
+        const desiredDepth = 2;
+        const desiredWidth = 4;
+        model3.scale.set(
+            0.1, 0.1, 0.33
+        );
+        model3.position.set(-500,0,800);
+        model3.rotateY(THREE.MathUtils.degToRad(112));
+        scene.add(model3);
+       
+        const mixer = new THREE.AnimationMixer(model3);
+        gltf.animations.forEach((clip) => {
+            mixer.clipAction(clip).play();
+        });
+         
+        //model.geometry.parameters.width;
+        //console.log("MODEL "+model);
+        animate(model3);
+        animateModel(model3);
+    },
+    undefined
+    ,
+
+    function (error) {
+        console.error(error);
+    }
+);
+
+loader.load(
+    anotherboatUrl.href,
+    function (gltf) {
+        model4 = gltf.scene;
+        const desiredHeight = 2;
+        const desiredDepth = 2;
+        const desiredWidth = 4;
+        model4.scale.set(
+            0.1, 0.1, 0.33
+        );
+        model4.position.set(-800,0,-800);
+        model4.rotateY(THREE.MathUtils.degToRad(160));
+        scene.add(model4);
+       
+        const mixer = new THREE.AnimationMixer(model4);
+        gltf.animations.forEach((clip) => {
+            mixer.clipAction(clip).play();
+        });
+         
+        //model.geometry.parameters.width;
+        //console.log("MODEL "+model);
+        animate(model4);
+        animateModel(model4);
+    },
+    undefined
+    ,
+
+    function (error) {
+        console.error(error);
+    }
+);
+
 
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
@@ -119,16 +232,12 @@ gui.add(options, 'width', 4, 10).onChange(function (value) {
 gui.add(options, 'position', -10.0, 10.0).onChange(function (e) {
     sailboat.position.y = e;
 });
+
 const cubeTextureLoader = new THREE.CubeTextureLoader();
 scene.background = cubeTextureLoader.load(
     [
 
-        left,
-        right,
-        top,
-        bottom,
-        back,
-        front
+      
 
         // left,
         // right,
@@ -136,18 +245,36 @@ scene.background = cubeTextureLoader.load(
         // bottom,
         // back,
         // front
+        
+       
+    //     pxday,
+    //     nxday,
+    //     pyday,
+    //     nyday,
+    //    // t,
+    //     nzday,
+    //     pzday,
 
-        // pxday,
-        // nxday,
-        // pyday,
-        // nyday,
-        // pzday,
-        // nzday
+    // right2,
+    // left2,
+    // top2,
+    // bottom2,
+    // front2,
+    // back2, 
+    
+    right3,
+    left3,
+    top3,
+    bottom3,
+    front3,
+    back3, 
+   
+       
     ]
 );
 
-
-
+//scene.background.setSize(1);
+scene.background.scale=14;
 
 gui.add(options, 'speed', 0, 0.1);
 gui.add(options, 'wireframe').onChange(function (e) {
@@ -296,9 +423,9 @@ const waterMaterial5 = new THREE.ShaderMaterial({
         vPosition = position;
   
         vec3 pos = position;
-        float wave1 = sin(pos.x * 7.02 + time) * 2.0;
-        float wave2 = cos(pos.y * 7.03 + time * 0.7) * 2.0;
-        float wave3 = sin(pos.x * 7.05 + time * 0.5) * 1.5;
+        float wave1 = sin(pos.x * 7.02 + time) * 5.0;
+        float wave2 = cos(pos.y * 7.03 + time * 0.7) * 3.0;
+        float wave3 = sin(pos.x * 7.05 + time * 0.5) * 2.5;
         float wave4 = cos(pos.y * 7.07 + time * 0.3) * 1.5;
         float wave5 = noise(vec2(pos.x * 0.1, pos.y * 0.1 + time * 0.2)) * 2.0;
         float wave6 = sin(pos.x * 8.01 + time * 0.9) * 1.0;
@@ -317,19 +444,19 @@ const waterMaterial5 = new THREE.ShaderMaterial({
       varying vec3 vPosition;
   
       void main() {
-        float depth = gl_FragCoord.y / 500.0;
+        float depth = gl_FragCoord.y / 1100.0;
         vec3 finalColor = mix(oceanColor, skyColor, depth);
   
         // Apply blue tint and fog effect
         float fogAmount = smoothstep(0.0, 1.0, depth * 2.0);
-        finalColor = mix(finalColor, vec3(0.0, 0.4, 0.7), fogAmount);
+        finalColor = mix(finalColor, vec3(0.0, 0.4, 1.9), fogAmount);
   
         // Simulate caustics (light patterns on the ocean floor)
         float caustics = sin(vUv.x * 30.0 + time * 10.0) * 0.01;
         finalColor += vec3(caustics * 0.1, caustics * 0.2, caustics * 0.3);
   
         // Add specular highlight for a more realistic water surface
-        vec3 lightDir = normalize(vec3(-0.5, 0.5, 1.0));
+        vec3 lightDir = normalize(vec3(-0.5, 1.5, 1.0));
         float specular = pow(max(dot(reflect(lightDir, normalize(vNormal)), vec3(0, 0, 1)), 0.0), 32.0);
         finalColor += vec3(specular * 0.3);
   
