@@ -383,12 +383,8 @@ const update = (delta) => {
         totalForce.update(delta);
     }
 
-    //   تحديث موقع المنطاد بناءا على الفيزياء 
-    var newPosition = new Vector3(
-        totalForce.getPosition().x,
-        totalForce.getPosition().y,
-        totalForce.getPosition().z,
-    );
+    var newPosition = totalForce.getPosition();
+
     var boatRotation = totalForce.getRotation();
 
     model.position.copy(newPosition);

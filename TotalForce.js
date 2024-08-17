@@ -55,14 +55,14 @@ class TotalForce {
     checkFlag() {
         if (environment.flag == true) {
             if (environment.upDown == 0) {
-                environment.WaterVelocity.y++;
-                if (environment.WaterVelocity.y > 30) {
+                environment.WaterVelocity.y += 0.2;
+                if (environment.WaterVelocity.y >= 20) {
                     environment.upDown = 1;
                 }
             }
             else {
-                environment.WaterVelocity.y--;
-                if (environment.WaterVelocity.y == 0) {
+                environment.WaterVelocity.y -= 0.2;
+                if (environment.WaterVelocity.y <= 0) {
                     environment.flag = false;
                     environment.upDown = 0;
                 }
