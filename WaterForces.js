@@ -11,6 +11,11 @@ class WaterForce {
 
 
 
+    zoba() {
+        this.environment.WaterVelocity.x++;
+        this.environment.WaterVelocity.y--;
+    }
+
     calculateBuoyantForce() {
         //قوة الطفو = كثافة المي * ثابت الجاذبية الأرضية * حجم السائل المزاح
         let yPosition = this.environment.position.y;

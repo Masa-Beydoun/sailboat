@@ -7,50 +7,49 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { Vector3 } from "three";
 
 
-import pxday from './pxday.jpg';
-import nxday from './nxday.jpg';
-import pyday from './pyday.jpg';
-import nyday from './nyday.jpg';
-import pzday from './pzday.jpg';
-import nzday from './nzday.jpg';
+import pxday from './compressedTextures/New folder/pxday.jpg';
+import nxday from './compressedTextures/New folder/nxday.jpg';
+import pyday from './compressedTextures/New folder/pyday.jpg';
+import nyday from './compressedTextures/New folder/nyday.jpg';
+import pzday from './compressedTextures/New folder/pzday.jpg';
+import nzday from './compressedTextures/New folder/nzday.jpg';
 
-import t from './t7.jpg';
+import t from './compressedTextures/New folder/t7.jpg';
 
-import front from './newfront.jpg';
-import top from './newtop.jpg';
-import back from './newback.jpg';
-import left from './newleft.jpg';
-import right from './newright.jpg';
-import bottom from './bottom.jpg';
-import water6 from './sea.jpg';
+import front from './compressedTextures/New folder/newfront.jpg';
+import top from './compressedTextures/New folder/newtop.jpg';
+import back from './compressedTextures/New folder/newback.jpg';
+import left from './compressedTextures/New folder/newleft.jpg';
+import right from './compressedTextures/New folder/newright.jpg';
+import bottom from './compressedTextures/New folder/bottom.jpg';
+import water6 from './compressedTextures/New folder/sea.jpg';
 
-import front2 from './newfront2.jpg';
-import top2 from './newtop2.jpg';
-import back2 from './newback2.jpg';
-import left2 from './newleft2.jpg';
-import right2 from './newright2.jpg';
-import bottom2 from './newbottom2.jpg';
+import front2 from './compressedTextures/New folder/newfront2.jpg';
+import top2 from './compressedTextures/New folder/newtop2.jpg';
+import back2 from './compressedTextures/New folder/newback2.jpg';
+import left2 from './compressedTextures/New folder/newleft2.jpg';
+import right2 from './compressedTextures/New folder/newright2.jpg';
+import bottom2 from './compressedTextures/New folder/newbottom2.jpg';
 
-import front3 from './newfront3.jpg';
-import top3 from './newtop3.jpg';
-import back3 from './newback3.jpg';
-import left3 from './newleft3.jpg';
-import right3 from './newright3.jpg';
-import bottom3 from './newbottom3.jpg';
+import front3 from './compressedTextures/New folder/newfront3.jpg';
+import top3 from './compressedTextures/New folder/newtop3.jpg';
+import back3 from './compressedTextures/New folder/newback3.jpg';
+import left3 from './compressedTextures/New folder/newleft3.jpg';
+import right3 from './compressedTextures/New folder/newright3.jpg';
+import bottom3 from './compressedTextures/New folder/newbottom3.jpg';
 
-import water from './water.jpg';
+import water from './compressedTextures/New folder/water.jpg';
 import { depth, mod, reflect, textureLoad } from 'three/examples/jsm/nodes/Nodes.js';
 import { TextureLoader } from 'three/src/Three.js';
 import { FlyControls } from 'three/addons/controls/FlyControls.js';
 
-// import WindForces from "./WindForces";
 import TotalForce from "./TotalForce"
 
 
-const boatUrl = new URL('./untitled.glb', import.meta.url);
-const boatUrl2 = new URL('./untitled.glb', import.meta.url);
-const anotherboatUrl = new URL('./untitled.glb', import.meta.url);
-const boatUrl3 = new URL('./oldboat.gltf', import.meta.url);
+const boatUrl = new URL('./compressedTextures/New folder/untitled.glb', import.meta.url);
+const boatUrl2 = new URL('./compressedTextures/New folder/untitled.glb', import.meta.url);
+const anotherboatUrl = new URL('./compressedTextures/New folder/untitled.glb', import.meta.url);
+const boatUrl3 = new URL('./compressedTextures/New folder/oldboat.gltf', import.meta.url);
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 const renderer = new THREE.WebGLRenderer();
@@ -60,7 +59,7 @@ const orbit = new OrbitControls(camera, renderer.domElement);
 const totalForce = new TotalForce();
 
 var cameraOffset = new Vector3(0, 10, -60);
-var model,model2,model3,model4;
+var model, model2, model3, model4;
 
 
 const loader = new GLTFLoader();
@@ -84,7 +83,7 @@ loader.load(
         gltf.animations.forEach((clip) => {
             mixer.clipAction(clip).play();
         });
-        //  model.position.set(0,4.9,0);
+        model.position.set(0, 0, 0);
         //   model.geometry.parameters.width;
         // console.log("MODEL "+model);
         animate(model);
@@ -107,14 +106,14 @@ loader.load(
         model2.scale.set(
             0.1, 0.1, 0.2
         );
-        model2.position.set(800,0,-600);
+        model2.position.set(800, 0, -600);
         scene.add(model2);
-       
+
         const mixer = new THREE.AnimationMixer(model2);
         gltf.animations.forEach((clip) => {
             mixer.clipAction(clip).play();
         });
-         
+
         //model.geometry.parameters.width;
         //console.log("MODEL "+model);
         animate(model2);
@@ -138,15 +137,15 @@ loader.load(
         model3.scale.set(
             0.1, 0.1, 0.33
         );
-        model3.position.set(-500,0,800);
+        model3.position.set(-500, 0, 800);
         model3.rotateY(THREE.MathUtils.degToRad(112));
         scene.add(model3);
-       
+
         const mixer = new THREE.AnimationMixer(model3);
         gltf.animations.forEach((clip) => {
             mixer.clipAction(clip).play();
         });
-         
+
         //model.geometry.parameters.width;
         //console.log("MODEL "+model);
         animate(model3);
@@ -170,15 +169,15 @@ loader.load(
         model4.scale.set(
             0.1, 0.1, 0.33
         );
-        model4.position.set(-800,0,-800);
+        model4.position.set(-800, 0, -800);
         model4.rotateY(THREE.MathUtils.degToRad(160));
         scene.add(model4);
-       
+
         const mixer = new THREE.AnimationMixer(model4);
         gltf.animations.forEach((clip) => {
             mixer.clipAction(clip).play();
         });
-         
+
         //model.geometry.parameters.width;
         //console.log("MODEL "+model);
         animate(model4);
@@ -201,8 +200,6 @@ const axeHelper = new THREE.AxesHelper(5);
 scene.add(axeHelper);
 camera.position.set(0, 2, 5);
 
-
-
 const gui = new dat.GUI();
 
 const options = {
@@ -214,30 +211,13 @@ const options = {
     height: 0,
     width: 0
 };
-gui.add(options, 'depth', 2, 10).onChange(function (value) {
-    // Update boat geometry when depth changes
-    sailboat.geometry = new THREE.BoxGeometry(options.width, options.height, value);
-});
 
-gui.add(options, 'height', 2, 10).onChange(function (value) {
-    // Update boat geometry when height changes
-    sailboat.geometry = new THREE.BoxGeometry(options.width, value, options.depth);
-});
-
-gui.add(options, 'width', 4, 10).onChange(function (value) {
-    // Update boat geometry when width changes
-    sailboat.geometry = new THREE.BoxGeometry(value, options.height, options.depth);
-});
-// Add GUI control for position
-gui.add(options, 'position', -10.0, 10.0).onChange(function (e) {
-    sailboat.position.y = e;
-});
 
 const cubeTextureLoader = new THREE.CubeTextureLoader();
 scene.background = cubeTextureLoader.load(
     [
 
-      
+
 
         // left,
         // right,
@@ -245,45 +225,35 @@ scene.background = cubeTextureLoader.load(
         // bottom,
         // back,
         // front
-        
-       
-    //     pxday,
-    //     nxday,
-    //     pyday,
-    //     nyday,
-    //    // t,
-    //     nzday,
-    //     pzday,
 
-    // right2,
-    // left2,
-    // top2,
-    // bottom2,
-    // front2,
-    // back2, 
-    
-    right3,
-    left3,
-    top3,
-    bottom3,
-    front3,
-    back3, 
-   
-       
+
+        //     pxday,
+        //     nxday,
+        //     pyday,
+        //     nyday,
+        //    // t,
+        //     nzday,
+        //     pzday,
+
+        // right2,
+        // left2,
+        // top2,
+        // front2,
+        // back2, 
+
+        right3,
+        left3,
+        top3,
+        bottom3,
+        front3,
+        back3,
+
+
     ]
 );
 
 //scene.background.setSize(1);
-scene.background.scale=14;
-
-gui.add(options, 'speed', 0, 0.1);
-gui.add(options, 'wireframe').onChange(function (e) {
-    sphere.material.wireframe = e;
-});
-gui.addColor(options, 'sphereColor').onChange(function (e) {
-    sphere.material.color.set(e);
-});
-
+scene.background.scale = 14;
 
 var moveForward = false;
 var moveBackward = false;
@@ -345,10 +315,6 @@ function animateModel(model) {
 }
 
 
-
-
-
-
 function animate(model) {
     requestAnimationFrame(animate);
 
@@ -365,11 +331,7 @@ function animate(model) {
     renderer.render(scene, camera);
 }
 
-
-
 // THE MOST GOOD WATER 
-
-
 
 const ambientLight = new THREE.AmbientLight(0xaaaaaa);
 scene.add(ambientLight);
@@ -471,6 +433,7 @@ const water5 = new THREE.Mesh(waterGeometry5, waterMaterial5);
 water5.rotation.x = -Math.PI / 2;
 // Adjust the position as needed to fit within your scene
 water5.position.set(-60, 0, 0);
+water5.rotation.z = 300;
 scene.add(water5);
 
 
@@ -502,6 +465,8 @@ function animateBoat() {
 
 
 const update = (delta) => {
+    if (!model) return; // Exit if the model is not loaded yet
+
 
     if (totalForce.getStartSimulation() == true) {
 
@@ -510,6 +475,7 @@ const update = (delta) => {
         totalForce.update(delta);
     }
 
+    // if(totalForce.)
     var newPosition = totalForce.getPosition();
 
     var boatRotation = totalForce.getRotation();
@@ -521,9 +487,8 @@ const update = (delta) => {
 
 
 
-    // // التحقق من عدم تجاوز الحدود الداخلية للسكاي بوكس
-    // const halfSkyboxSize = 2450; // نصف أبعاد السكاي بوكس
-    // newPosition.clampScalar(-halfSkyboxSize, halfSkyboxSize);
+    // التحقق من عدم تجاوز البحر
+    newPosition.clampScalar(-5000, 256);
 
     // تحديث موقع الكاميرا بناءً على الموقع الجديد للمنطاد
     //  camera.position.x = 2 * model.position.x +  cameraOffset.x ;

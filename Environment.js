@@ -69,6 +69,7 @@ class Environment {
         this.airResistanceConstant = 1;
 
         this.flag = false;
+        this.zoba = false;
         this.upDown = 0;
         this.dfa = 0;
         //متغيرات كثافة الماء
@@ -101,6 +102,7 @@ class Environment {
         this.gui.add(this.windVelocity, 'z').min(-30).max(40).step(1).name("wind velocity z");
         this.gui.add(this, "dfa").min(-1).max(1).step(1).name("dfa");
         this.gui.add(this, "flag").name("flag");
+        this.gui.add(this, "zoba").name("zoba");
         this.gui.add(this, "startSimulation").name("start simulation ");
     }
     updateWaterDensity() {

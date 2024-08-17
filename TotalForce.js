@@ -68,10 +68,14 @@ class TotalForce {
                 }
             }
         }
-        console.log("flag", environment.flag);
-        console.log("water velocity y", environment.WaterVelocity.y);
 
+    }
+    checkZoba() {
+        if (environment.zoba == true) {
+            waterForce.zoba();
+            rotationalDynamics.zobaTorque(waterForce.calculateWaterForceX());
 
+        }
     }
 
     getPosition() {

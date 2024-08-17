@@ -38,6 +38,12 @@ class RotationalDynamics {
         console.log("torque", this.enviroment.torque);
     }
 
+    zobaTorque(waterForce) {
+        const pointOfApplication = new Vector3(this.enviroment.length / 2, 0, 0);
+        this.enviroment.torque.x += pointOfApplication * waterForce.x;
+
+
+    }
 
 
     calculateAcceleration() {
