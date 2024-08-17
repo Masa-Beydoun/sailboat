@@ -10,10 +10,29 @@ class WaterForce {
     }
 
 
+    calculateWaveForce() {
 
-    zoba() {
-        this.environment.WaterVelocity.x++;
+        let waterForceY = 0.5 * this.environment.cd * this.environment.waterDensity * this.environment.keel * Math.pow(this.environment.waveVelocity, 2);
+
+        waterForceY = parseFloat(waterForceY.toFixed(8));
+        let waterForceVector = new Vector3(0, waterForceY, 0);
+        return waterForceVector;
+
+    }
+
+    calculateZobaForce() {
+
+        if (this.environment.zoba != true) return new Vector3(0, 0, 0);
+        this.environment.WaterVelocity.x = 0;
         this.environment.WaterVelocity.y--;
+        this.environment.WaterVelocity.z = 0;
+        this.environment.zobaVelcity += 0.05;
+        let waterForceZ = 0.5 * this.environment.cd * this.environment.waterDensity * (this.environment.keel + this.environment.length * this.environment.hight) * Math.pow(this.environment.zobaVelcity, 2);
+
+        waterForceZ = parseFloat(waterForceZ.toFixed(8));
+        let waterForceVector = new Vector3(0, 0, waterForceZ);
+        return waterForceVector;
+
     }
 
     calculateBuoyantForce() {
@@ -42,7 +61,6 @@ class WaterForce {
     }
 
     calculateWeightOfBoat() {
-        // كتلة الحمولة = كتلة الركاب + كتلة المعدات
         var weightOfBoat = this.environment.totalMass * this.environment.gravityConstant;
         return new Vector3(0, parseFloat(-weightOfBoat.toFixed(8)), 0);
     }
@@ -65,11 +83,8 @@ class WaterForce {
 
 
         let relativeVelocity = this.environment.WaterVelocity.clone();
-        // relativeVelocity.z += this.enviroment.velocity.z;
-
 
         let waterForceY = 0.5 * this.environment.cd * this.environment.waterDensity * this.environment.keel * Math.pow(relativeVelocity.y, 2);
-
 
         if (this.environment.WaterVelocity.y < 0) waterForceY = 0;
 
@@ -143,6 +158,8 @@ class WaterForce {
         tf.add(this.calculateWaterResistance());
         tf.add(this.calculateWaterForceZ());
         tf.add(this.calculateWaterForceX());
+        tf.add(this.calculateWaveForce());
+        this.calculateZobaForce();
         return tf;
     }
 

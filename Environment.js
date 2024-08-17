@@ -68,6 +68,9 @@ class Environment {
         //متغيرات قوة مقاومة الهواء
         this.airResistanceConstant = 1;
 
+        this.waveVelocity = 0;
+        this.zobaVelcity = 0;
+        this.upDown2 = 0;
         this.flag = false;
         this.zoba = false;
         this.upDown = 0;
@@ -100,7 +103,7 @@ class Environment {
         this.gui.add(this, "pressure").min(0).max(10).step(1).name("Pressure");
         this.gui.add(this.windVelocity, 'x').min(-30).max(40).step(1).name("wind velocity x");
         this.gui.add(this.windVelocity, 'z').min(-30).max(40).step(1).name("wind velocity z");
-        this.gui.add(this, "dfa").min(-1).max(1).step(1).name("dfa");
+        this.gui.add(this, "dfa").min(-10).max(10).step(1).name("dfa");
         this.gui.add(this, "flag").name("flag");
         this.gui.add(this, "zoba").name("zoba");
         this.gui.add(this, "startSimulation").name("start simulation ");

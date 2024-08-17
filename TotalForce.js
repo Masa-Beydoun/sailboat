@@ -17,7 +17,6 @@ class TotalForce {
 
     calculateTotalForces() {
 
-
         let allTF = new Vector3();
         allTF.add(waterForce.totalForce());
         allTF.add(windForces.totalForce());
@@ -31,7 +30,6 @@ class TotalForce {
 
     calculateVelocity() {
         environment.velocity.add(environment.acceleration.clone().multiplyScalar(environment.deltaTime));
-        environment.velocity.multiplyScalar(0.9); // Apply damping
     }
 
     calculatePosition() {
@@ -42,26 +40,33 @@ class TotalForce {
     update() {
         environment.updateValues();
         this.checkFlag();
+        this.waveVelocity();
 
 
         this.calculateAcceleration();
         this.calculateVelocity();
         this.calculatePosition();
-        let water = waterForce.calculateWaterForceZ().add(waterForce.calculateWaterForceX()).add(waterForce.calculateWaterForceY());
-        rotationalDynamics.update(water, windForces.calculateWindForceX());
+        if (environment.zoba == true) {
+            let water = waterForce.calculateWaterForceZ().add(waterForce.calculateWaterForceX()).add(waterForce.calculateWaterForceY()).add(waterForce.calculateWaveForce());
+            rotationalDynamics.update(water, waterForce.calculateZobaForce());
+        }
+        else {
+            let water = waterForce.calculateWaterForceZ().add(waterForce.calculateWaterForceX()).add(waterForce.calculateWaterForceY()).add(waterForce.calculateWaveForce());
+            rotationalDynamics.update(water, windForces.calculateWindForceX());
+        }
         // console.log("newwwwwwwwww")
     }
 
     checkFlag() {
         if (environment.flag == true) {
             if (environment.upDown == 0) {
-                environment.WaterVelocity.y += 0.2;
+                environment.WaterVelocity.y += 0.1;
                 if (environment.WaterVelocity.y >= 20) {
                     environment.upDown = 1;
                 }
             }
             else {
-                environment.WaterVelocity.y -= 0.2;
+                environment.WaterVelocity.y -= 0.1;
                 if (environment.WaterVelocity.y <= 0) {
                     environment.flag = false;
                     environment.upDown = 0;
@@ -70,14 +75,27 @@ class TotalForce {
         }
 
     }
-    checkZoba() {
-        if (environment.zoba == true) {
-            waterForce.zoba();
-            rotationalDynamics.zobaTorque(waterForce.calculateWaterForceX());
 
+    waveVelocity() {
+        if (environment.upDown2 == 0) {
+            environment.waveVelocity += 0.1;
+            if (environment.waveVelocity >= 13) {
+                environment.upDown2 = 1;
+            }
+        }
+        else if (environment.upDown2 == 1) {
+            environment.waveVelocity -= 0.1;
+            if (environment.waveVelocity <= -13) {
+                environment.upDown2 = 0;
+            }
         }
     }
 
+
+
+    getZobaForce() {
+        return waterForce.z;
+    }
     getPosition() {
         return environment.position;
     }

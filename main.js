@@ -385,13 +385,13 @@ const waterMaterial5 = new THREE.ShaderMaterial({
         vPosition = position;
   
         vec3 pos = position;
-        float wave1 = sin(pos.x * 7.02 + time) * 5.0;
-        float wave2 = cos(pos.y * 7.03 + time * 0.7) * 3.0;
-        float wave3 = sin(pos.x * 7.05 + time * 0.5) * 2.5;
-        float wave4 = cos(pos.y * 7.07 + time * 0.3) * 1.5;
-        float wave5 = noise(vec2(pos.x * 0.1, pos.y * 0.1 + time * 0.2)) * 2.0;
-        float wave6 = sin(pos.x * 8.01 + time * 0.9) * 1.0;
-        float wave7 = cos(pos.y * 8.02 + time * 0.8) * 1.0;
+        float wave1 = sin(pos.x * 7.02 + time) * 4.0;
+        float wave2 = cos(pos.y * 7.03 + time * 0.7) * 2.0;
+        float wave3 = sin(pos.x * 7.05 + time * 0.5) * 1.5;
+        float wave4 = cos(pos.y * 7.07 + time * 0.3) * 0.5;
+        float wave5 = noise(vec2(pos.x * 0.1, pos.y * 0.1 + time * 0.2)) * 1.0;
+        float wave6 = sin(pos.x * 8.01 + time * 0.9) * 0.5;
+        float wave7 = cos(pos.y * 8.02 + time * 0.8) * 0.5;
         pos.z += wave1 + wave2 + wave3 + wave4 + wave5 + wave6 + wave7;
   
         gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
@@ -465,7 +465,7 @@ function animateBoat() {
 
 
 const update = (delta) => {
-    if (!model) return; // Exit if the model is not loaded yet
+    if (!model) return;
 
 
     if (totalForce.getStartSimulation() == true) {

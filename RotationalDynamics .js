@@ -17,8 +17,6 @@ class RotationalDynamics {
         this.enviroment.torque.z = waterForce.z * pointOfApplicationWater.z * this.enviroment.dfa;
         this.enviroment.torque.x = windForce.x * pointOfApplicationWind.x - waterForce.x * pointOfApplicationWater.x;
 
-
-
         this.enviroment.torque.y = waterForce.y * pointOfApplicationWater.z;
 
 
@@ -34,15 +32,14 @@ class RotationalDynamics {
             this.enviroment.torque.z -= this.enviroment.boatRotation.z * stabilizationFactor;
         }
 
-
-        console.log("torque", this.enviroment.torque);
     }
 
     zobaTorque(waterForce) {
-        const pointOfApplication = new Vector3(this.enviroment.length / 2, 0, 0);
-        this.enviroment.torque.x += pointOfApplication * waterForce.x;
-
-
+        if (this.enviroment.zoba == false) return;
+        const pointOfApplication = new Vector3(0, 0, this.enviroment.length / 2);
+        const v = pointOfApplication.z * waterForce.z;
+        console.log(v);
+        this.enviroment.torque.z += v;
     }
 
 
@@ -76,7 +73,12 @@ class RotationalDynamics {
     }
 
     update(waterForce, windForce) {
-        this.calculateTorque(waterForce, windForce);
+        if (this.enviroment.zoba == true) {
+            this.zobaTorque(windForce);
+        }
+        else {
+            this.calculateTorque(waterForce, windForce);
+        }
         this.calculateAcceleration();
         this.calculateVelocity();
         this.calculateTheta();
