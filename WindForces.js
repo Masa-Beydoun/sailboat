@@ -43,12 +43,8 @@ class WindForces {
             airDensityOutside *
             this.environment.surfaceArea *
             v;
-        var airResistanceVector;
-        if (this.environment.position.y > 3750) {
-            airResistanceVector = new Vector3(0, -airResistance, 0);
-        } else {
-            airResistanceVector = new Vector3(0, airResistance, 0);
-        }
+        let airResistanceVector = new Vector3(0, airResistance, 0);
+
         return airResistanceVector;
     }
 

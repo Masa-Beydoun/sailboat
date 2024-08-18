@@ -38,7 +38,6 @@ class RotationalDynamics {
         if (this.enviroment.zoba == false) return;
         const pointOfApplication = new Vector3(0, 0, this.enviroment.length / 2);
         const v = pointOfApplication.z * waterForce.z;
-        console.log(v);
         this.enviroment.torque.z += v;
     }
 

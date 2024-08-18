@@ -32,11 +32,17 @@ class TotalForce {
         environment.velocity.add(environment.acceleration.clone().multiplyScalar(environment.deltaTime));
     }
 
-    calculatePosition() {
-        environment.position.add(environment.velocity.clone().multiplyScalar(environment.deltaTime));
-        environment.position.y = Math.min(environment.hight / 2, environment.position.y);
-    }
 
+
+
+    checkPosition() {
+        console.log("position", environment.position);
+        if (environment.position.z <= -3 && (environment.position.x < 75 && environment.position.x > -75)) {
+
+            return true;
+        }
+        return false;
+    }
     update() {
         environment.updateValues();
         this.checkFlag();

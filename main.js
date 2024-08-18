@@ -45,13 +45,14 @@ import { FlyControls } from 'three/addons/controls/FlyControls.js';
 
 import TotalForce from "./TotalForce"
 
+const island = new URL('./compressedTextures/New folder/the_wharf___lake_sea.glb', import.meta.url);
 
 const boatUrl = new URL('./compressedTextures/New folder/untitled.glb', import.meta.url);
 const boatUrl2 = new URL('./compressedTextures/New folder/untitled.glb', import.meta.url);
 const anotherboatUrl = new URL('./compressedTextures/New folder/untitled.glb', import.meta.url);
 const boatUrl3 = new URL('./compressedTextures/New folder/oldboat.gltf', import.meta.url);
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 5000);
 const renderer = new THREE.WebGLRenderer();
 const orbit = new OrbitControls(camera, renderer.domElement);
 
@@ -59,10 +60,39 @@ const orbit = new OrbitControls(camera, renderer.domElement);
 const totalForce = new TotalForce();
 
 var cameraOffset = new Vector3(0, 10, -60);
-var model, model2, model3, model4;
+var islandModel, model, model2, model3, model4;
 
 
 const loader = new GLTFLoader();
+loader.load(
+    island.href,
+    function (gltf) {
+        islandModel = gltf.scene;
+        islandModel.position.set(0, -100, -320);
+        islandModel.scale.set(
+            50,
+            50,
+            50
+        );
+        scene.add(islandModel);
+        const mixer = new THREE.AnimationMixer(islandModel);
+        gltf.animations.forEach((clip) => {
+            mixer.clipAction(clip).play();
+        });
+
+        animate(islandModel);
+        animateModel(islandModel);
+    },
+    undefined
+    ,
+
+    function (error) {
+        console.error(error);
+    }
+);
+
+
+
 loader.load(
     boatUrl.href,
     function (gltf) {
@@ -191,14 +221,13 @@ loader.load(
     }
 );
 
-
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 orbit.update();
 const textureLoader = new THREE.TextureLoader();
 const axeHelper = new THREE.AxesHelper(5);
 scene.add(axeHelper);
-camera.position.set(0, 2, 5);
+camera.position.set(0, 30, -160);
 
 const gui = new dat.GUI();
 
@@ -252,6 +281,12 @@ scene.background = cubeTextureLoader.load(
     ]
 );
 
+// Create a bounding box for each model
+// const boatBox = new THREE.Box3().setFromObject(islandModel);
+// const islandBox = new THREE.Box3().setFromObject(model);
+//var sizeFromParent = (model);
+// const boatBox = new THREE.Box3(1000, 1000).getSize(new THREE.Vector3());
+// const islandBox = new THREE.Box3(1000, 1000).getSize(new THREE.Vector3());
 //scene.background.setSize(1);
 scene.background.scale = 14;
 
@@ -297,39 +332,6 @@ function onKeyUp(event) {
 document.addEventListener('keydown', onKeyDown);
 document.addEventListener('keyup', onKeyUp);
 
-
-
-function animateModel(model) {
-    requestAnimationFrame(() => animateModel(model));
-    // requestAnimationFrame(animateModel);
-
-    // Move the camera based on keyboard input
-    if (moveForward) camera.position.z -= 0.1;
-    if (moveBackward) camera.position.z += 0.1;
-    if (moveLeft) camera.position.x -= 0.1;
-    if (moveRight) camera.position.x += 0.1;
-
-    // console.log(model.position.y);
-
-    renderer.render(scene, camera);
-}
-
-
-function animate(model) {
-    requestAnimationFrame(animate);
-
-
-    waterMaterial5.uniforms.time.value += 0.0089;
-
-    renderer.render(scene, camera);
-    // Move the camera based on keyboard input
-    if (moveForward) camera.position.z -= 0.1;
-    if (moveBackward) camera.position.z += 0.1;
-    if (moveLeft) camera.position.x -= 0.1;
-    if (moveRight) camera.position.x += 0.1;
-
-    renderer.render(scene, camera);
-}
 
 // THE MOST GOOD WATER 
 
@@ -437,36 +439,17 @@ water5.rotation.z = 300;
 scene.add(water5);
 
 
-const boxGeometry = new THREE.BoxGeometry(5, 2, 3);
-const boxMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 }); // Adjust the color as needed
-const box = new THREE.Mesh(boxGeometry, boxMaterial);
-
-// Set initial position of the box
-box.position.set(0, 5, 0); // Adjust the position as needed to place it on the water surface
-scene.add(box);
-
-//window.addEventListener('resize', onWindowResize, false);
-//onWindowResize();
-
-animate();
-function animateBoat() {
-    // Calculate the displacement of the water at the position of the boat
-    const boatPosition = new THREE.Vector3();
-    water5.getWorldPosition(boatPosition);
-    const waterDisplacement = Math.sin((boatPosition.x + boatPosition.z) / 10 + waterUniforms.time.value) * 0.5; // Adjust the parameters as needed for the desired effect
-
-    // Update box position to simulate boat movement
-    box.position.y = water5.position.y + waterDisplacement + 2 - 1; // Adjust the offset as needed to keep the box above the water surface
-
-    // Request animation frame
-    requestAnimationFrame(animateBoat);
-    update();
-}
-
-
 const update = (delta) => {
     if (!model) return;
 
+
+    // islandBox.setFromObject(model);
+    // boatBox.setFromOb/ject(islandModel);
+
+    // Check for intersections
+    // if (islandBox.intersectsBox(boatBox)) {
+    // console.log('Collision detected!');
+    // }
 
     if (totalForce.getStartSimulation() == true) {
 
@@ -486,18 +469,15 @@ const update = (delta) => {
     model.rotation.z = boatRotation.z;
 
 
-
     // التحقق من عدم تجاوز البحر
     newPosition.clampScalar(-5000, 256);
-
-    // تحديث موقع الكاميرا بناءً على الموقع الجديد للمنطاد
-    //  camera.position.x = 2 * model.position.x +  cameraOffset.x ;
-    //  camera.position.y = model.position.y + cameraOffset.y;
-    //  camera.position.z = 2 * model.position.z + cameraOffset.z;
-
-    // camera.lookAt(model.position);
-    // رسم السيناريو
 };
+
+
+
+
+
+
 
 
 export const main = () => {
@@ -520,6 +500,53 @@ export const main = () => {
     loop();
 };
 
+
+function animateBoat() {
+    // Calculate the displacement of the water at the position of the boat
+    const boatPosition = new THREE.Vector3();
+    water5.getWorldPosition(boatPosition);
+    const waterDisplacement = Math.sin((boatPosition.x + boatPosition.z) / 10 + waterUniforms.time.value) * 0.5; // Adjust the parameters as needed for the desired effect
+
+    // Request animation frame
+    requestAnimationFrame(animateBoat);
+    update();
+}
+
+
+function animateModel(model) {
+    requestAnimationFrame(() => animateModel(model));
+    // requestAnimationFrame(animateModel);
+
+    // Move the camera based on keyboard input
+    if (moveForward) camera.position.z -= 0.1;
+    if (moveBackward) camera.position.z += 0.1;
+    if (moveLeft) camera.position.x -= 0.1;
+    if (moveRight) camera.position.x += 0.1;
+
+    // console.log(model.position.y);
+
+    renderer.render(scene, camera);
+}
+
+
+function animate(model) {
+    requestAnimationFrame(animate);
+
+
+    waterMaterial5.uniforms.time.value += 0.0089;
+
+    renderer.render(scene, camera);
+    // Move the camera based on keyboard input
+    if (moveForward) camera.position.z -= 0.1;
+    if (moveBackward) camera.position.z += 0.1;
+    if (moveLeft) camera.position.x -= 0.1;
+    if (moveRight) camera.position.x += 0.1;
+
+    renderer.render(scene, camera);
+}
+
+
+animate();
 
 // Call the animateBoat function to start the animation
 animateBoat();
