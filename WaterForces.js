@@ -106,7 +106,7 @@ class WaterForce {
         let waterForceX = 0.5 * this.environment.cd * this.environment.waterDensity * this.environment.keel * Math.pow(relativeVelocity.x, 2);
         waterForceX = parseFloat(waterForceX.toFixed(8));
 
-        if (this.environment.WaterVelocity.x < 0) waterForceX *= -1;
+        if (this.environment.WaterVelocity.x > 0) waterForceX *= -1;
 
         let waterForceVector = new Vector3(waterForceX, 0, 0);
         // console.log("water force x", waterForceVector);
@@ -145,9 +145,6 @@ class WaterForce {
         return waterResistanceVector;
     }
 
-    calculateBernoly() {
-        // let p = this.enviroment.p0 - 0.5 * this.enviroment.waterDensity * Math.pow((this.enviroment.velocity.lengthSq() - this.enviroment.v0), 2);
-    }
 
 
 
@@ -163,25 +160,7 @@ class WaterForce {
         return tf;
     }
 
-    update() {
-        var deltaTime = 0.01666666666666666666666666666667;
-        var tf = this.totalForce();
 
-        console.log("weightVector", this.calculateWeightOfBoat());
-        console.log("BuoyantForce", this.calculateBuoyantForce());
-        console.log("waterResistanceVector", this.calculateWaterResistance());
-        console.log("WaterForceXZ", this.calculateWaterForceX())
-        console.log("WaterForceXZ", this.calculateWaterForceZ())
-
-
-        // this.enviroment.accelration.copy(tf).divideScalar(this.enviroment.totalMass);
-        // Update velocity
-        // this.enviroment.velocity.add(this.enviroment.accelration.clone().multiplyScalar(deltaTime));
-        // Update position
-        // this.enviroment.position.add(this.enviroment.velocity.clone().multiplyScalar(deltaTime));
-        // Apply damping to simulate water resistance
-        // this.enviroment.velocity.multiplyScalar(0.9);
-    }
 
 
 }

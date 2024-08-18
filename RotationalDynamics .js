@@ -15,7 +15,7 @@ class RotationalDynamics {
         const pointOfApplicationWater = new Vector3(this.enviroment.keel / 2, 0, this.enviroment.length / 2);
 
         this.enviroment.torque.z = waterForce.z * pointOfApplicationWater.z * this.enviroment.dfa;
-        this.enviroment.torque.x = windForce.x * pointOfApplicationWind.x - waterForce.x * pointOfApplicationWater.x;
+        this.enviroment.torque.x = -windForce.x * pointOfApplicationWind.x - waterForce.x * pointOfApplicationWater.x;
 
         this.enviroment.torque.y = waterForce.y * pointOfApplicationWater.z;
 
