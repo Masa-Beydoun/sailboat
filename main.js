@@ -68,7 +68,7 @@ loader.load(
     island.href,
     function (gltf) {
         islandModel = gltf.scene;
-        islandModel.position.set(0, -100, -320);
+        islandModel.position.set(-120, -100, -380);
         islandModel.scale.set(
             50,
             50,
